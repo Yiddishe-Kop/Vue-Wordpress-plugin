@@ -1,0 +1,215 @@
+.vue-app {
+  margin: 10px auto 50px;
+}
+
+.vue-app #wpData {
+  display: none;
+}
+
+.vue-app button {
+  background-color: var(--grey3);
+  outline: 0;
+  margin-right: 10px;
+  width: 40px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.vue-app button.cta {
+  background-color: var(--brand);
+}
+
+.vue-app button:disabled {
+  background-color: var(--grey2);
+}
+
+.vue-app .circle {
+  display: inline-block;
+  padding: 6px 10px;
+  background-color: var(--grey3);
+  border-radius: 50%;
+  margin-left: 6px;
+}
+
+.vue-app .pricing-switcher {
+  color: var(--grey7);
+  text-align: center;
+}
+
+.vue-app .pricing-switcher .fieldset {
+  display: inline-block;
+  position: relative;
+  padding: 8px;
+  border-radius: 50em;
+  background-color: var(--grey3);
+}
+
+.vue-app .pricing-switcher input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.vue-app .pricing-switcher label {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin: 0;
+  float: left;
+  width: 100px;
+  height: 45px;
+  line-height: 45px;
+  cursor: pointer;
+  color: var(--grey8);
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 500;
+  -webkit-transition-delay: 0.1s;
+          transition-delay: 0.1s;
+  -webkit-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+.vue-app .pricing-switcher label.active {
+  color: var(--grey3);
+}
+
+.vue-app .pricing-switcher .switch {
+  /* floating background */
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  height: 45px;
+  width: 100px;
+  background-color: var(--grey7);
+  border-radius: 50em;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+  transition: transform 0.3s, -webkit-transform 0.3s;
+}
+
+.vue-app .pricing-switcher .switch.move {
+  -webkit-transform: translateX(100px);
+          transform: translateX(100px);
+}
+
+.vue-app .meal-section .section-title {
+  color: var(--grey5);
+  margin-top: 25px;
+  padding-left: 10px;
+}
+
+.vue-app .meal-section .section-details {
+  margin: 10px auto;
+  width: 100%;
+  min-height: 50px;
+  background-color: var(--grey2);
+  -webkit-box-shadow: var(--shaddow);
+          box-shadow: var(--shaddow);
+  border-radius: 8px;
+  border-top: 2px solid var(--grey5);
+  overflow: hidden;
+}
+
+.vue-app .food-component {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  padding: 10px 20px;
+  border-bottom: 5px solid var(--grey4);
+  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
+}
+
+.vue-app .food-component .component-title {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0;
+          flex: 1 0;
+  min-width: 160px;
+  margin-right: 16px;
+}
+
+.vue-app .food-component .component-details {
+  -webkit-box-flex: 4;
+      -ms-flex: 4 1;
+          flex: 4 1;
+  margin-right: 16px;
+}
+
+.vue-app .food-component .component-pills {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1;
+          flex: 1 1;
+}
+
+.vue-app .dropdown-wrapper .dropdown {
+  background-color: var(--grey3);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  width: 220px;
+  padding: 4px 10px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
+}
+
+.vue-app .dropdown-wrapper .dropdown:hover {
+  border-color: var(--brand2);
+}
+
+.vue-app .dropdown-wrapper .dropdown .arrow-down-icon {
+  color: var(--brand);
+}
+
+.vue-app .dropdown-wrapper .dropdown-options {
+  -webkit-transform-origin: top center;
+          transform-origin: top center;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  min-width: 220px;
+}
+
+.vue-app .dropdown-wrapper .dropdown-options .dropdown-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 4px 0;
+  padding: 4px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: var(--bg);
+  width: auto;
+}
+
+.vue-app .dropdown-wrapper .dropdown-options .dropdown-item:hover {
+  background-color: var(--blue2);
+}
+
+.vue-app .dropdown-wrapper .dropdown-options .dropdown-item:active {
+  color: inherit;
+}
+
+.vue-app .dropdown-wrapper .dropdown-options .dropdown-item img {
+  width: 70px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 30px;
+  margin-left: -16px;
+}
+
+.slide-in-enter-active,
+.slide-in-leave-active {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.slide-in-enter, .slide-in-leave-to {
+  opacity: 0;
+  -webkit-transform: scaleY(0.2);
+          transform: scaleY(0.2);
+}
+/*# sourceMappingURL=style.css.map */

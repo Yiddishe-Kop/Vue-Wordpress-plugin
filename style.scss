@@ -1,0 +1,187 @@
+.vue-app {
+  #wpData {
+    display: none;
+  }
+  margin: 10px auto 50px;
+  button {
+    background-color: var(--grey3);
+    outline: 0;
+    margin-right: 10px;
+    width: 40px;
+    transition: all 0.3s ease;
+    &.cta {
+      background-color: var(--brand);
+    }
+    &:disabled {
+      background-color: var(--grey2);
+    }
+  }
+  .circle {
+    display: inline-block;
+    padding: 6px 10px;
+    background-color: var(--grey3);
+    border-radius: 50%;
+    margin-left: 6px;
+  }
+
+  // pricing-switcher =======================================
+  .pricing-switcher {
+    color: var(--grey7);
+
+    $bg-padding: 8px;
+    $button-width: 100px;
+    $button-height: 45px;
+    $animation-time: 0.3s;
+
+    text-align: center;
+
+    .fieldset {
+      display: inline-block;
+      position: relative;
+      padding: $bg-padding;
+      border-radius: 50em;
+      background-color: var(--grey3);
+    }
+
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    label {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      margin: 0;
+      float: left;
+      width: $button-width;
+      height: $button-height;
+      line-height: $button-height;
+      cursor: pointer;
+      color: var(--grey8);
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 500;
+      transition-delay: 0.1s;
+      transition: color $animation-time ease;
+      &.active {
+        color: var(--grey3);
+        // font-weight: 700;
+      }
+    }
+
+    .switch {
+      /* floating background */
+      position: absolute;
+      top: $bg-padding;
+      left: $bg-padding;
+      height: $button-height;
+      width: $button-width;
+      background-color: var(--grey7);
+      border-radius: 50em;
+      transition: transform $animation-time;
+      &.move {
+        transform: translateX($button-width);
+      }
+    }
+  }
+
+  // meal-section ==================================================
+  .meal-section {
+    .section-title {
+      color: var(--grey5);
+      margin-top: 25px;
+      padding-left: 10px;
+    }
+    .section-details {
+      margin: 10px auto;
+      width: 100%;
+      min-height: 50px;
+      background-color: var(--grey2);
+      box-shadow: var(--shaddow);
+      border-radius: 8px;
+      border-top: 2px solid var(--grey5);
+      overflow: hidden;
+    }
+  }
+
+  // food-component =================================================
+  .food-component {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    border-bottom: 5px solid var(--grey4);
+    transition: all 0.3s ease-in;
+    .component-title {
+      flex: 1 0;
+      min-width: 160px;
+      margin-right: 16px;
+    }
+    .component-details {
+      flex: 4 1;
+      margin-right: 16px;
+    }
+    .component-pills {
+      flex: 1 1;
+    }
+  }
+
+  // item-dropdown ===================================================
+  .dropdown-wrapper {
+    .dropdown {
+      background-color: var(--grey3);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      width: 220px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease-in;
+      &:hover {
+        border-color: var(--brand2);
+      }
+      .arrow-down-icon {
+        color: var(--brand);
+      }
+    }
+
+    .dropdown-options {
+      transform-origin: top center;
+      width: fit-content;
+      min-width: 220px;
+      // dropdown-item ===============================================
+      .dropdown-item {
+        display: flex;
+        margin: 4px 0;
+        padding: 4px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: var(--bg);
+        width: auto;
+        &:hover {
+          background-color: var(--blue2);
+        }
+        &:active {
+          color: inherit;
+        }
+        img {
+          width: 70px;
+          border-radius: 50%;
+          float: left;
+          margin-right: 30px;
+          margin-left: -16px;
+        }
+      }
+    }
+  }
+}
+
+// transitions ===========================================
+.slide-in-enter-active,
+.slide-in-leave-active {
+  transition: all 0.3s;
+}
+.slide-in-enter, .slide-in-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: scaleY(0.2);
+}
