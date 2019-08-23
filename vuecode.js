@@ -59,7 +59,7 @@ Vue.component('food-component', {
 })
 
 Vue.component('food-dropdown', {
-  props: ['emptyText'],
+  props: ['emptyText', 'inPackage', 'inSection', 'inComponent'],
   template: `<div class="dropdown-wrapper">
                 <div @click="isOpen = !isOpen" class="dropdown">
                   {{label}}
@@ -83,8 +83,11 @@ Vue.component('food-dropdown', {
     }
   },
   created() {
-    vEvent.$on('foodOptionSelect', data => {
-      this.selectedOption = data.itemName
+    vEvent.$on(`${this.inPackage}foodOptionSelect`, data => {
+      if (data.package == this.inPackage
+        && data.section == this.inSection
+        && data.component == this.inComponent)
+        this.selectedOption = data.itemName
       this.isOpen = false
     })
   }
@@ -102,6 +105,7 @@ Vue.component('dropdown-item', {
              </div>`,
   methods: {
     onSelect() {
+      // console.log(`${this.inPackage}foodOptionSelect`)
       vEvent.$emit(`${this.inPackage}foodOptionSelect`, {
         package: this.inPackage,
         section: this.inSection,
@@ -121,18 +125,16 @@ var shabbosPackageMixin = {
       selectedPackage: 'Basic',
     }
   },
-  created() {
-    vEvent.$on(`${this.packageName}foodOptionSelect`, data => {
-      console.log('Selected: ', data)
-      if (data.package == this.packageName) {
-        this.packageData[data.section][data.component].selected.push(data.itemId)
-      }
-    })
-  },
   mounted() {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
     this.packageName = package_data.package_name
     this.packageData = package_data.sections_items
     console.log(this.$data);
+    // console.log(`${this.packageName}foodOptionSelect`)
+    vEvent.$on(`${this.packageName}foodOptionSelect`, data => {
+      console.log('Selected: ', data)
+      this.packageData[data.section][data.component].selected.push(data.itemId)
+      console.log(this.$data);
+    })
   },
 }
