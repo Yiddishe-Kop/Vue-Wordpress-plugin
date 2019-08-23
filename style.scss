@@ -101,7 +101,6 @@
       box-shadow: var(--shaddow);
       border-radius: 8px;
       border-top: 2px solid var(--grey5);
-      overflow: hidden;
     }
   }
 
@@ -127,8 +126,13 @@
     }
   }
 
-  // item-dropdown ===================================================
+  .food-line {
+    margin-bottom: 10px;
+  }
+
+  // food-dropdown ===================================================
   .dropdown-wrapper {
+    position: relative;
     .dropdown {
       background-color: var(--grey3);
       border: 1px solid transparent;
@@ -149,6 +153,12 @@
       transform-origin: top center;
       width: fit-content;
       min-width: 220px;
+      position: absolute;
+      z-index: 100;
+      background-color: var(--grey3);
+      padding: 2px 5px;
+      border-radius: 12px;
+      box-shadow: var(--shaddow);
       // dropdown-item ===============================================
       .dropdown-item {
         display: flex;
@@ -156,10 +166,11 @@
         padding: 4px 20px;
         border-radius: 8px;
         cursor: pointer;
-        background-color: var(--bg);
+        background-color: var(--grey1);
         width: auto;
+        user-select: none;
         &:hover {
-          background-color: var(--blue2);
+          background-color: var(--grey2);
         }
         &:active {
           color: inherit;

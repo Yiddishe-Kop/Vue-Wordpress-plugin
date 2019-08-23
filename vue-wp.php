@@ -67,25 +67,27 @@ function vue_output_menu_packages($product, $sections) {
       ></deluxe-switch>
       <meal-section v-for="(section, title) in packageData" :key="title" :title="title">
         <food-component v-for="(component, name) in section" :key="name" :title="name" :desc="component.info.desc">
-          <food-dropdown
-            empty-text="Please choose..."
-            :in-package="packageName"
-            :in-section="title"
-            :in-component="name"
-          >
-            <dropdown-item
-              v-for="(item, i) in component.items"
-              :key="item.id"
-              :image="item.image"
-              :name="item.name"
-              :price="item.price"
+          <div v-for="n in Number(component.info.qty_free)" :key="n" class="food-line">
+            <food-dropdown
+              empty-text="Please choose..."
               :in-package="packageName"
               :in-section="title"
               :in-component="name"
-              :item-id="item.id"
             >
-            </dropdown-item>
-          </food-dropdown>
+              <dropdown-item
+                v-for="(item, i) in component.items"
+                :key="item.id"
+                :image="item.image"
+                :name="item.name"
+                :price="item.price"
+                :in-package="packageName"
+                :in-section="title"
+                :in-component="name"
+                :item-id="item.id"
+              >
+              </dropdown-item>
+            </food-dropdown>
+          </div>
         </food-component>
       </meal-section>
     </div>

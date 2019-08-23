@@ -122,6 +122,7 @@ var shabbosPackageMixin = {
     return {
       packageName: null,
       packageData: {},
+      selectedOptions: {},
       selectedPackage: 'Basic',
     }
   },
@@ -129,8 +130,25 @@ var shabbosPackageMixin = {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
     this.packageName = package_data.package_name
     this.packageData = package_data.sections_items
-    console.log(this.$data);
-    // console.log(`${this.packageName}foodOptionSelect`)
+    // console.log(this.$data);
+
+    let options = {}
+    for (const section in this.packageData) {
+      options[section] = {}
+      for (const component in this.packageData[section]) {
+        options[section][component] = {}
+        let comp = this.packageData[section][component]
+        options[section][component].info = {
+          costExtra: comp.info.cost_extra,
+          numFree: comp.info.qty_free,
+        }
+        options[section][component].options = Array(Number(comp.info.qty_free)).fill(undefined)
+      }
+    }
+    this.selectedOptions = options
+    console.log(this.selectedOptions);
+
+
     vEvent.$on(`${this.packageName}foodOptionSelect`, data => {
       console.log('Selected: ', data)
       this.packageData[data.section][data.component].selected.push(data.itemId)

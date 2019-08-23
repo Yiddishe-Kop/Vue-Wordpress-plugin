@@ -108,7 +108,6 @@
           box-shadow: var(--shaddow);
   border-radius: 8px;
   border-top: 2px solid var(--grey5);
-  overflow: hidden;
 }
 
 .vue-app .food-component {
@@ -145,6 +144,14 @@
           flex: 1 1;
 }
 
+.vue-app .food-line {
+  margin-bottom: 10px;
+}
+
+.vue-app .dropdown-wrapper {
+  position: relative;
+}
+
 .vue-app .dropdown-wrapper .dropdown {
   background-color: var(--grey3);
   border: 1px solid transparent;
@@ -171,6 +178,13 @@
   width: -moz-fit-content;
   width: fit-content;
   min-width: 220px;
+  position: absolute;
+  z-index: 100;
+  background-color: var(--grey3);
+  padding: 2px 5px;
+  border-radius: 12px;
+  -webkit-box-shadow: var(--shaddow);
+          box-shadow: var(--shaddow);
 }
 
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item {
@@ -181,12 +195,16 @@
   padding: 4px 20px;
   border-radius: 8px;
   cursor: pointer;
-  background-color: var(--bg);
+  background-color: var(--grey1);
   width: auto;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item:hover {
-  background-color: var(--blue2);
+  background-color: var(--grey2);
 }
 
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item:active {
