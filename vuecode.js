@@ -7,7 +7,11 @@ Vue.component('button-cta', {
       default: false
     }
   },
-  template: `<button @click="$emit('click')" :disabled="disabled" class="cta"><span class="button-label"><slot/></span></button>`
+  template: `<button @click="$emit('click')" :disabled="disabled"><slot/></button>`
+})
+
+Vue.component('pill', {
+  template: `<span class="pill"><slot/></span>`
 })
 
 Vue.component('deluxe-switch', {
@@ -41,7 +45,7 @@ Vue.component('meal-section', {
 
 
 Vue.component('food-component', {
-  props: ['title', 'desc'],
+  props: ['title', 'desc', 'comp', 'inPackage', 'inSection'],
   template: `<div class="food-component">
                 <div class="component-title">
                   <h5 class="serif">{{title}}</h5>
@@ -53,13 +57,38 @@ Vue.component('food-component', {
                 </div>
 
                 <div class="component-pills">
-                  <p>pills</p>
+                  <pill class="green">{{qtyIncluded}} included</pill>
+                  <pill class="red" v-if="addedCost">+\${{addedCost}}</pill>
                 </div>
-              </div>`
+              </div>`,
+  data() {
+    return {
+      componentData: this.comp,
+      selected: this.comp.selected,
+      qtyIncluded: this.comp.info.qty_free,
+    }
+  },
+  computed: {
+    addedCost() {
+      let qtyFree = Number(this.qtyIncluded)
+      if (this.selected.length > qtyFree) {
+        let extras = this.selected.slice(qtyFree)
+        let addedCost = 0;
+        extras.forEach(id => {
+          if(this.componentData.items[id]) { // not null
+            addedCost += Number(this.componentData.items[id].price)
+          }
+        })
+        return addedCost
+      } else {
+        return 0
+      }
+    }
+  }
 })
 
 Vue.component('food-dropdown', {
-  props: ['emptyText', 'inPackage', 'inSection', 'inComponent'],
+  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'addBtn', 'index'],
   template: `<div class="dropdown-wrapper">
                 <div @click="isOpen = !isOpen" class="dropdown">
                   {{label}}
@@ -70,6 +99,12 @@ Vue.component('food-dropdown', {
                     <slot/>
                   </div>
                 </transition>
+                <button-cta v-if="addBtn" @click="addLine" class="only-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30px" viewBox="0 0 24 24" class="icon-add-circle"><circle cx="12" cy="12" r="10" class="primary"/><path class="secondary" d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"/></svg>
+                </button-cta>
+                <button-cta v-if="addBtn" @click="removeLine" class="only-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30px" viewBox="0 0 24 24" class="icon-remove-circle"><circle cx="12" cy="12" r="10" class="primary"/><rect width="12" height="2" x="6" y="11" class="secondary" rx="1"/></svg>
+                </button-cta>
               </div>`,
   data() {
     return {
@@ -82,11 +117,28 @@ Vue.component('food-dropdown', {
       return this.selectedOption || this.emptyText
     }
   },
+  methods: {
+    addLine() {
+      vEvent.$emit(`${this.inPackage}addline`,{
+        package: this.inPackage,
+        section: this.inSection,
+        component: this.inComponent,
+      })
+    },
+    removeLine() {
+      vEvent.$emit(`${this.inPackage}removeline`, {
+        package: this.inPackage,
+        section: this.inSection,
+        component: this.inComponent,
+      })
+    }
+  },
   created() {
-    vEvent.$on(`${this.inPackage}foodOptionSelect`, data => {
+    vEvent.$on(`${this.inPackage}foodoptionselect`, data => {
       if (data.package == this.inPackage
         && data.section == this.inSection
-        && data.component == this.inComponent)
+        && data.component == this.inComponent
+        && data.index == this.index)
         this.selectedOption = data.itemName
       this.isOpen = false
     })
@@ -95,7 +147,7 @@ Vue.component('food-dropdown', {
 
 
 Vue.component('dropdown-item', {
-  props: ['name', 'price', 'image', 'inPackage', 'inSection', 'inComponent', 'itemId'],
+  props: ['name', 'price', 'image', 'inPackage', 'inSection', 'inComponent', 'itemId', 'index'],
   template: `<div @click="onSelect" class="dropdown-item">
                 <img v-if="image" :src="image">
                 <div>
@@ -106,12 +158,13 @@ Vue.component('dropdown-item', {
   methods: {
     onSelect() {
       // console.log(`${this.inPackage}foodOptionSelect`)
-      vEvent.$emit(`${this.inPackage}foodOptionSelect`, {
+      vEvent.$emit(`${this.inPackage}foodoptionselect`, {
         package: this.inPackage,
         section: this.inSection,
         component: this.inComponent,
         itemName: this.name,
         itemId: this.itemId,
+        index: this.index,
       })
     }
   }
@@ -122,7 +175,6 @@ var shabbosPackageMixin = {
     return {
       packageName: null,
       packageData: {},
-      selectedOptions: {},
       selectedPackage: 'Basic',
     }
   },
@@ -130,29 +182,23 @@ var shabbosPackageMixin = {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
     this.packageName = package_data.package_name
     this.packageData = package_data.sections_items
-    // console.log(this.$data);
+    console.log(this.$data);
 
-    let options = {}
-    for (const section in this.packageData) {
-      options[section] = {}
-      for (const component in this.packageData[section]) {
-        options[section][component] = {}
-        let comp = this.packageData[section][component]
-        options[section][component].info = {
-          costExtra: comp.info.cost_extra,
-          numFree: comp.info.qty_free,
-        }
-        options[section][component].options = Array(Number(comp.info.qty_free)).fill(undefined)
-      }
-    }
-    this.selectedOptions = options
-    console.log(this.selectedOptions);
-
-
-    vEvent.$on(`${this.packageName}foodOptionSelect`, data => {
+    // onDDselect
+    vEvent.$on(`${this.packageName}foodoptionselect`, data => {
       console.log('Selected: ', data)
-      this.packageData[data.section][data.component].selected.push(data.itemId)
+      this.$set(
+        this.packageData[data.section][data.component].selected, data.index, data.itemId
+      )
       console.log(this.$data);
+    })
+    // onAddLine
+    vEvent.$on(`${this.packageName}addline`, data => {
+      this.packageData[data.section][data.component].selected.push(null);
+    })
+    // onRemoveLine
+    vEvent.$on(`${this.packageName}removeline`, data => {
+      this.packageData[data.section][data.component].selected.pop();
     })
   },
 }

@@ -33,7 +33,7 @@ function vue_output_menu_packages($product, $sections) {
                 continue; // only get from current section
             }
             $package_sections_items[$section_name][$wooco_component['name']]['info'] = $wooco_component;
-            $package_sections_items[$section_name][$wooco_component['name']]['selected'] = [];
+            $package_sections_items[$section_name][$wooco_component['name']]['selected'] = array_fill(0, (int) $wooco_component['qty_free'], null);
             $wooco_component_default = isset($wooco_component['default']) ? (int) $wooco_component['default'] : 0;
             $wooco_products = wooco_get_products($wooco_component['type'], $wooco_component[$wooco_component_type], $wooco_component_default);
             foreach ($wooco_products as $wooco_product) {
@@ -66,28 +66,41 @@ function vue_output_menu_packages($product, $sections) {
         :selected-val="selectedPackage"
       ></deluxe-switch>
       <meal-section v-for="(section, title) in packageData" :key="title" :title="title">
-        <food-component v-for="(component, name) in section" :key="name" :title="name" :desc="component.info.desc">
-          <div v-for="n in Number(component.info.qty_free)" :key="n" class="food-line">
-            <food-dropdown
-              empty-text="Please choose..."
-              :in-package="packageName"
-              :in-section="title"
-              :in-component="name"
-            >
-              <dropdown-item
-                v-for="(item, i) in component.items"
-                :key="item.id"
-                :image="item.image"
-                :name="item.name"
-                :price="item.price"
-                :in-package="packageName"
-                :in-section="title"
-                :in-component="name"
-                :item-id="item.id"
-              >
-              </dropdown-item>
-            </food-dropdown>
-          </div>
+        <food-component
+          v-for="(component, name) in section"
+          :key="name"
+          :title="name"
+          :desc="component.info.desc"
+          :comp="component"
+          :in-package="packageName"
+          :in-section="title"
+        >
+          <transition-group name="slide-in">
+            <div v-for="(sel, j) in component.selected" :key="name + j" class="food-line">
+                <food-dropdown
+                  empty-text="Please choose..."
+                  :in-package="packageName"
+                  :in-section="title"
+                  :in-component="name"
+                  :index="j"
+                  :add-btn="component.info.custom_qty == 'yes' && j == component.selected.length - 1"
+                >
+                  <dropdown-item
+                    v-for="(item, i) in component.items"
+                    :key="item.id"
+                    :image="item.image"
+                    :name="item.name"
+                    :price="item.price"
+                    :in-package="packageName"
+                    :in-section="title"
+                    :in-component="name"
+                    :item-id="item.id"
+                    :index="j"
+                  >
+                  </dropdown-item>
+                </food-dropdown>
+              </div>
+          </transition-group>
         </food-component>
       </meal-section>
     </div>

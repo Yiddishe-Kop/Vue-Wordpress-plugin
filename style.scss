@@ -4,11 +4,14 @@
   }
   margin: 10px auto 50px;
   button {
-    background-color: var(--grey3);
     outline: 0;
-    margin-right: 10px;
-    width: 40px;
     transition: all 0.3s ease;
+    margin: 0 10px;
+    &.only-icon {
+      margin: 0 1px;
+      background-color: transparent;
+      padding: 0;
+    }
     &.cta {
       background-color: var(--brand);
     }
@@ -134,11 +137,13 @@
   .dropdown-wrapper {
     position: relative;
     .dropdown {
+      display: inline-block;
       background-color: var(--grey3);
       border: 1px solid transparent;
       border-radius: 8px;
       width: 220px;
       padding: 4px 10px;
+      margin-right: 5px;
       cursor: pointer;
       transition: all 0.3s ease-in;
       &:hover {
@@ -183,6 +188,24 @@
           margin-left: -16px;
         }
       }
+    }
+  }
+
+  // dropdown-item ===============================================
+  .pill {
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin: 0 5px 5px 0;
+    white-space: nowrap;
+    float: right;
+    &.green {
+      background-color: var(--green1);
+      color: var(--green5);
+    }
+    &.red {
+      background-color: var(--red1);
+      color: var(--red);
     }
   }
 }
