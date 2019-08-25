@@ -7,6 +7,7 @@
     outline: 0;
     transition: all 0.3s ease;
     margin: 0 10px;
+    font-size: 18px;
     &.only-icon {
       margin: 0 1px;
       background-color: transparent;
@@ -100,9 +101,8 @@
       margin: 10px auto;
       width: 100%;
       min-height: 50px;
-      background-color: var(--grey2);
+      background-color: var(--grey1);
       box-shadow: var(--shaddow);
-      border-radius: 8px;
       border-top: 2px solid var(--grey5);
     }
   }
@@ -113,12 +113,20 @@
     display: flex;
     flex-wrap: wrap;
     padding: 10px 20px;
-    border-bottom: 5px solid var(--grey4);
+    border-bottom: 5px solid var(--grey3);
     transition: all 0.3s ease-in;
     .component-title {
       flex: 1 0;
       min-width: 160px;
       margin-right: 16px;
+      h5 {
+        margin-bottom: 6px;
+      }
+      .component-desc {
+        color: var(--grey5);
+        margin: 0;
+        line-height: 1;
+      }
     }
     .component-details {
       flex: 4 1;
@@ -130,7 +138,7 @@
   }
 
   .food-line {
-    margin-bottom: 10px;
+    margin: 6px 0;
   }
 
   // food-dropdown ===================================================
@@ -151,6 +159,7 @@
       }
       .arrow-down-icon {
         color: var(--brand);
+        float: right;
       }
     }
 
@@ -191,12 +200,12 @@
     }
   }
 
-  // dropdown-item ===============================================
+  // pill ====================================================
   .pill {
     font-weight: 600;
     padding: 3px 8px;
     border-radius: 4px;
-    margin: 0 5px 5px 0;
+    margin: 8px 5px 5px 0;
     white-space: nowrap;
     float: right;
     &.green {
@@ -206,6 +215,28 @@
     &.red {
       background-color: var(--red1);
       color: var(--red);
+    }
+  }
+
+  .summary {
+    margin: 30px 0;
+    padding: 8px;
+    border-top: 2px solid var(--grey3);
+    border-bottom: 2px solid var(--grey3);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    .spacer {
+      flex: 2 1;
+    }
+    .total {
+      color: var(--grey5);
+      b {
+        color: var(--grey8);
+      }
+    }
+    button {
+      padding: 2px 16px;
     }
   }
 }

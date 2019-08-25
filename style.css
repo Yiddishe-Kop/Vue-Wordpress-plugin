@@ -11,6 +11,7 @@
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   margin: 0 10px;
+  font-size: 18px;
 }
 
 .vue-app button.only-icon {
@@ -107,10 +108,9 @@
   margin: 10px auto;
   width: 100%;
   min-height: 50px;
-  background-color: var(--grey2);
+  background-color: var(--grey1);
   -webkit-box-shadow: var(--shaddow);
           box-shadow: var(--shaddow);
-  border-radius: 8px;
   border-top: 2px solid var(--grey5);
 }
 
@@ -122,7 +122,7 @@
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   padding: 10px 20px;
-  border-bottom: 5px solid var(--grey4);
+  border-bottom: 5px solid var(--grey3);
   -webkit-transition: all 0.3s ease-in;
   transition: all 0.3s ease-in;
 }
@@ -133,6 +133,16 @@
           flex: 1 0;
   min-width: 160px;
   margin-right: 16px;
+}
+
+.vue-app .food-component .component-title h5 {
+  margin-bottom: 6px;
+}
+
+.vue-app .food-component .component-title .component-desc {
+  color: var(--grey5);
+  margin: 0;
+  line-height: 1;
 }
 
 .vue-app .food-component .component-details {
@@ -149,7 +159,7 @@
 }
 
 .vue-app .food-line {
-  margin-bottom: 10px;
+  margin: 6px 0;
 }
 
 .vue-app .dropdown-wrapper {
@@ -175,6 +185,7 @@
 
 .vue-app .dropdown-wrapper .dropdown .arrow-down-icon {
   color: var(--brand);
+  float: right;
 }
 
 .vue-app .dropdown-wrapper .dropdown-options {
@@ -229,7 +240,7 @@
   font-weight: 600;
   padding: 3px 8px;
   border-radius: 4px;
-  margin: 0 5px 5px 0;
+  margin: 8px 5px 5px 0;
   white-space: nowrap;
   float: right;
 }
@@ -242,6 +253,38 @@
 .vue-app .pill.red {
   background-color: var(--red1);
   color: var(--red);
+}
+
+.vue-app .summary {
+  margin: 30px 0;
+  padding: 8px;
+  border-top: 2px solid var(--grey3);
+  border-bottom: 2px solid var(--grey3);
+  font-size: 22px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.vue-app .summary .spacer {
+  -webkit-box-flex: 2;
+      -ms-flex: 2 1;
+          flex: 2 1;
+}
+
+.vue-app .summary .total {
+  color: var(--grey5);
+}
+
+.vue-app .summary .total b {
+  color: var(--grey8);
+}
+
+.vue-app .summary button {
+  padding: 2px 16px;
 }
 
 .slide-in-enter-active,

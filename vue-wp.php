@@ -45,11 +45,13 @@ function vue_output_menu_packages($product, $sections) {
 
     $package_data = [
         'package_name' => $product->get_name(),
+        'package_id' => $product_id,
         'discount' => esc_attr(get_post_meta($product_id, 'wooco_discount_percent', true)),
         'qty_min' => esc_attr(get_post_meta($product_id, 'wooco_qty_min', true)),
         'qty_max' => esc_attr(get_post_meta($product_id, 'wooco_qty_max', true)),
         'price' => $product->get_price(),
         'pricing' => $product->get_pricing(),
+        'addToCartUrl' => $product->add_to_cart_url(),
         'sections_items' => $package_sections_items,
     ];
 
@@ -65,7 +67,7 @@ function vue_output_menu_packages($product, $sections) {
         label2="Deluxe"
         :selected-val="selectedPackage"
       ></deluxe-switch>
-      <meal-section v-for="(section, title) in packageData" :key="title" :title="title">
+      <meal-section v-for="(section, title) in packageData" :key="title" :title="title" :section="section">
         <food-component
           v-for="(component, name) in section"
           :key="name"
@@ -84,6 +86,7 @@ function vue_output_menu_packages($product, $sections) {
                   :in-component="name"
                   :index="j"
                   :add-btn="component.info.custom_qty == 'yes' && j == component.selected.length - 1"
+                  :comp="component"
                 >
                   <dropdown-item
                     v-for="(item, i) in component.items"
@@ -103,6 +106,12 @@ function vue_output_menu_packages($product, $sections) {
           </transition-group>
         </food-component>
       </meal-section>
+      <form :action="addToCartUrl" method="post" enctype="multipart/form-data" class="summary">
+        <input name="wooco_ids" type="hidden" :value="wooco_ids">
+        <div class="spacer"></div>
+        <span class="total">Total: <b>${{totalPrice}}</b></span>
+        <button-cta type="submit" name="add-to-cart" :value="packageId">Add to Cart</button-cta>
+      </form>
     </div>
 
     <script>
