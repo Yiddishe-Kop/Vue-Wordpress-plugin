@@ -30,7 +30,7 @@ Vue.component('deluxe-switch', {
 Vue.component('meal-section', {
   props: ['title', 'section'],
   template: `<div v-if="Object.keys(section).length" class="meal-section">
-              <h3 class="section-title serif m">{{title}}</h3>
+              <h3 class="section-title b">{{title}}</h3>
               <div class="section-details">
                 <slot/>
               </div>
@@ -39,10 +39,10 @@ Vue.component('meal-section', {
 
 
 Vue.component('food-component', {
-  props: ['title', 'desc', 'comp', 'inPackage', 'inSection'],
-  template: `<div class="food-component">
+  props: ['title', 'desc', 'comp', 'inPackage', 'inSection', 'isDeluxe'],
+  template: `<div v-if="comp.info.deluxe_only != 'yes' || isDeluxe" class="food-component">
                 <div class="component-title">
-                  <h5 class="serif">{{title}}</h5>
+                  <h5 class="b">{{title}}</h5>
                   <p class="component-desc">{{desc}}</p>
                 </div>
 
@@ -59,10 +59,12 @@ Vue.component('food-component', {
     return {
       componentData: this.comp,
       selected: this.comp.selected,
-      qtyIncluded: this.comp.info.qty_free,
     }
   },
   computed: {
+    qtyIncluded() {
+      return this.isDeluxe ? this.comp.info.qty_free_deluxe : this.comp.info.qty_free
+    },
     addedCost() {
       let qtyFree = Number(this.qtyIncluded)
       if (this.selected.length > qtyFree) {
@@ -96,10 +98,10 @@ Vue.component('food-dropdown', {
                   </div>
                 </transition>
                 <button-cta v-if="addBtn" @click="addLine" class="only-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30px" viewBox="0 0 24 24" class="icon-add-circle"><circle cx="12" cy="12" r="10" class="primary"/><path class="secondary" d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-add-circle"><circle cx="12" cy="12" r="10" class="primary"/><path class="secondary" d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"/></svg>
                 </button-cta>
                 <button-cta v-if="addBtn && comp.selected.length > 1" @click="removeLine" class="only-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30px" viewBox="0 0 24 24" class="icon-remove-circle"><circle cx="12" cy="12" r="10" class="primary"/><rect width="12" height="2" x="6" y="11" class="secondary" rx="1"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-remove-circle"><circle cx="12" cy="12" r="10" class="primary"/><rect width="12" height="2" x="6" y="11" class="secondary" rx="1"/></svg>
                 </button-cta>
               </div>`,
   data() {
@@ -138,7 +140,7 @@ Vue.component('food-dropdown', {
         this.selectedOption = data.itemName
       this.isOpen = false
     })
-    if (this.comp.info.default) { // select default option
+    if (this.comp.info.default) { // selects default option
       let defaultId = this.comp.info.default
       vEvent.$emit(`${this.inPackage}foodoptionselect`, {
         package: this.inPackage,
@@ -159,7 +161,7 @@ Vue.component('dropdown-item', {
                 <img v-if="image" :src="image">
                 <div>
                   <h5>{{name}}</h5>
-                  <p>\${{price}}</p>
+                  <p v-if="price">\${{price}}</p>
                 </div>
              </div>`,
   methods: {
@@ -211,7 +213,7 @@ var shabbosPackageMixin = {
           let sel = this.packageData[section][comp].selected
           sel.forEach(id => {
             if (id) { // not null
-              selectedIds.push(id + '/' + 1)
+              selectedIds.push(id + '/' + 1) // = ID/QTY
             }
           })
         }
@@ -222,7 +224,18 @@ var shabbosPackageMixin = {
     }
   },
   methods: {
+    onDeluxeChange(e) {
+      this.selectedPackage = e
 
+      for (let section in this.packageData) {
+        for (let component in this.packageData[section]) {
+          this.packageData[section][component].selected =
+            e == 'Basic' ?
+              this.packageData[section][component].selected_basic :
+              this.packageData[section][component].selected_deluxe;
+        }
+      }
+    }
   },
   mounted() {
     let package_data = JSON.parse(this.$refs.packageData.textContent)

@@ -33,7 +33,10 @@ function vue_output_menu_packages($product, $sections) {
                 continue; // only get from current section
             }
             $package_sections_items[$section_name][$wooco_component['name']]['info'] = $wooco_component;
-            $package_sections_items[$section_name][$wooco_component['name']]['selected'] = array_fill(0, (int) $wooco_component['qty_free'], null);
+            $package_sections_items[$section_name][$wooco_component['name']]['selected'] = array_fill(0, (int) $wooco_component['qty_free'], null); // preselects qty free
+            $package_sections_items[$section_name][$wooco_component['name']]['selected_basic'] = array_fill(0, (int) $wooco_component['qty_free'], null); // preselects qty free
+            $package_sections_items[$section_name][$wooco_component['name']]['selected_deluxe'] = array_fill(0, (int) $wooco_component['qty_free_deluxe'], null); // preselects qty free
+
             $wooco_component_default = isset($wooco_component['default']) ? (int) $wooco_component['default'] : 0;
             $wooco_products = wooco_get_products($wooco_component['type'], $wooco_component[$wooco_component_type], $wooco_component_default);
             foreach ($wooco_products as $wooco_product) {
@@ -58,32 +61,33 @@ function vue_output_menu_packages($product, $sections) {
     // echo '<pre>' . print_r($package_sections_items, true) . '</pre>';
 
     ?>
-    <div class="vue-app" id="vue-app-<?php echo $product_id ?>">
+    <div class="vue-app ui-font" id="vue-app-<?php echo $product_id ?>">
       <pre id="wpData" ref="packageData"><?php echo wp_json_encode($package_data) ?></pre>
       <deluxe-switch
-        @change="selectedPackage = $event"
+        @change="onDeluxeChange"
         id="<?php echo $product_id ?>"
         label1="Basic"
         label2="Deluxe"
         :selected-val="selectedPackage"
       ></deluxe-switch>
-      <meal-section v-for="(section, title) in packageData" :key="title" :title="title" :section="section">
+      <meal-section v-for="(section, sectionTitle) in packageData" :key="sectionTitle" :title="sectionTitle" :section="section">
         <food-component
-          v-for="(component, name) in section"
-          :key="name"
-          :title="name"
+          v-for="(component, componentName) in section"
+          :key="componentName"
+          :title="componentName"
           :desc="component.info.desc"
           :comp="component"
           :in-package="packageName"
-          :in-section="title"
+          :in-section="sectionTitle"
+          :is-deluxe="selectedPackage == 'Deluxe'"
         >
           <transition-group name="slide-in">
-            <div v-for="(sel, j) in component.selected" :key="name + j" class="food-line">
+            <div v-for="(sel, j) in component.selected" :key="componentName + j" class="food-line">
                 <food-dropdown
                   empty-text="Please choose..."
                   :in-package="packageName"
-                  :in-section="title"
-                  :in-component="name"
+                  :in-section="sectionTitle"
+                  :in-component="componentName"
                   :index="j"
                   :add-btn="component.info.custom_qty == 'yes' && j == component.selected.length - 1"
                   :comp="component"
@@ -93,10 +97,10 @@ function vue_output_menu_packages($product, $sections) {
                     :key="item.id"
                     :image="item.image"
                     :name="item.name"
-                    :price="item.price"
+                    :price="j+1 > component.info.qty_free ? item.price : null"
                     :in-package="packageName"
-                    :in-section="title"
-                    :in-component="name"
+                    :in-section="sectionTitle"
+                    :in-component="componentName"
                     :item-id="item.id"
                     :index="j"
                   >
@@ -108,6 +112,7 @@ function vue_output_menu_packages($product, $sections) {
       </meal-section>
       <form :action="addToCartUrl" method="post" enctype="multipart/form-data" class="summary">
         <input name="wooco_ids" type="hidden" :value="wooco_ids">
+        <input name="wooco_total" type="hidden" :value="totalPrice">
         <div class="spacer"></div>
         <span class="total">Total: <b>${{totalPrice}}</b></span>
         <button-cta type="submit" name="add-to-cart" :value="packageId">Add to Cart</button-cta>

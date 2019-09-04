@@ -2,7 +2,7 @@
   #wpData {
     display: none;
   }
-  margin: 10px auto 50px;
+  margin: 10px auto;
   button {
     outline: 0;
     transition: all 0.3s ease;
@@ -32,9 +32,9 @@
   .pricing-switcher {
     color: var(--grey7);
 
-    $bg-padding: 8px;
+    $bg-padding: 5px;
     $button-width: 100px;
-    $button-height: 45px;
+    $button-height: 35px;
     $animation-time: 0.3s;
 
     text-align: center;
@@ -64,8 +64,9 @@
       cursor: pointer;
       color: var(--grey8);
       text-decoration: none;
-      font-size: 1.3rem;
+      font-size: 1rem;
       font-weight: 500;
+      text-transform: uppercase;
       transition-delay: 0.1s;
       transition: color $animation-time ease;
       &.active {
@@ -83,8 +84,9 @@
       width: $button-width;
       background-color: var(--grey7);
       border-radius: 50em;
-      transition: transform $animation-time;
+      transition: all $animation-time;
       &.move {
+        background-color: var(--brand);
         transform: translateX($button-width);
       }
     }
@@ -92,13 +94,14 @@
 
   // meal-section ==================================================
   .meal-section {
+    margin-top: 15px;
     .section-title {
       color: var(--grey5);
-      margin-top: 25px;
       padding-left: 10px;
+      margin: 0;
     }
     .section-details {
-      margin: 10px auto;
+      margin: 6px auto 20px;
       width: 100%;
       min-height: 50px;
       background-color: var(--grey1);
@@ -144,6 +147,7 @@
   // food-dropdown ===================================================
   .dropdown-wrapper {
     position: relative;
+    white-space: nowrap;
     .dropdown {
       display: inline-block;
       background-color: var(--grey3);
@@ -176,6 +180,7 @@
       // dropdown-item ===============================================
       .dropdown-item {
         display: flex;
+        align-items: center;
         margin: 4px 0;
         padding: 4px 20px;
         border-radius: 8px;
@@ -195,6 +200,9 @@
           float: left;
           margin-right: 30px;
           margin-left: -16px;
+        }
+        h5 {
+          margin: 0;
         }
       }
     }

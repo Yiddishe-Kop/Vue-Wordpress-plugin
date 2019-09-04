@@ -1,5 +1,5 @@
 .vue-app {
-  margin: 10px auto 50px;
+  margin: 10px auto;
 }
 
 .vue-app #wpData {
@@ -44,7 +44,7 @@
 .vue-app .pricing-switcher .fieldset {
   display: inline-block;
   position: relative;
-  padding: 8px;
+  padding: 5px;
   border-radius: 50em;
   background-color: var(--grey3);
 }
@@ -61,13 +61,14 @@
   margin: 0;
   float: left;
   width: 100px;
-  height: 45px;
-  line-height: 45px;
+  height: 35px;
+  line-height: 35px;
   cursor: pointer;
   color: var(--grey8);
   text-decoration: none;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 500;
+  text-transform: uppercase;
   -webkit-transition-delay: 0.1s;
           transition-delay: 0.1s;
   -webkit-transition: color 0.3s ease;
@@ -81,31 +82,34 @@
 .vue-app .pricing-switcher .switch {
   /* floating background */
   position: absolute;
-  top: 8px;
-  left: 8px;
-  height: 45px;
+  top: 5px;
+  left: 5px;
+  height: 35px;
   width: 100px;
   background-color: var(--grey7);
   border-radius: 50em;
-  -webkit-transition: -webkit-transform 0.3s;
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s;
-  transition: transform 0.3s, -webkit-transform 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 .vue-app .pricing-switcher .switch.move {
+  background-color: var(--brand);
   -webkit-transform: translateX(100px);
           transform: translateX(100px);
 }
 
+.vue-app .meal-section {
+  margin-top: 15px;
+}
+
 .vue-app .meal-section .section-title {
   color: var(--grey5);
-  margin-top: 25px;
   padding-left: 10px;
+  margin: 0;
 }
 
 .vue-app .meal-section .section-details {
-  margin: 10px auto;
+  margin: 6px auto 20px;
   width: 100%;
   min-height: 50px;
   background-color: var(--grey1);
@@ -164,6 +168,7 @@
 
 .vue-app .dropdown-wrapper {
   position: relative;
+  white-space: nowrap;
 }
 
 .vue-app .dropdown-wrapper .dropdown {
@@ -208,6 +213,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   margin: 4px 0;
   padding: 4px 20px;
   border-radius: 8px;
@@ -234,6 +242,10 @@
   float: left;
   margin-right: 30px;
   margin-left: -16px;
+}
+
+.vue-app .dropdown-wrapper .dropdown-options .dropdown-item h5 {
+  margin: 0;
 }
 
 .vue-app .pill {
