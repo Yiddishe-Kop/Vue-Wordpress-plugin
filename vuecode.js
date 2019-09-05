@@ -32,7 +32,9 @@ Vue.component('meal-section', {
   template: `<div v-if="Object.keys(section).length" class="meal-section">
               <h3 class="section-title b">{{title}}</h3>
               <div class="section-details">
-                <slot/>
+                <slot>
+                  <p class="empty"><small>Nothing here</small><br>Try the Deluxe Package!</p>
+                </slot>
               </div>
             </div>`
 })
@@ -40,7 +42,7 @@ Vue.component('meal-section', {
 
 Vue.component('food-component', {
   props: ['title', 'desc', 'comp', 'inPackage', 'inSection', 'isDeluxe'],
-  template: `<div v-if="comp.info.deluxe_only != 'yes' || isDeluxe" class="food-component">
+  template: `<div  class="food-component">
                 <div class="component-title">
                   <h5 class="b">{{title}}</h5>
                   <p class="component-desc">{{desc}}</p>
@@ -51,17 +53,17 @@ Vue.component('food-component', {
                 </div>
 
                 <div class="component-pills">
-                  <pill class="green" v-if="componentData.info.custom_qty == 'yes'">{{qtyIncluded}} included</pill>
+                  <pill class="green">{{qtyIncluded}} included</pill>
                   <pill class="red" v-if="addedCost">+\${{addedCost}}</pill>
                 </div>
               </div>`,
   data() {
     return {
       componentData: this.comp,
-      selected: this.comp.selected,
     }
   },
   computed: {
+    selected() { return this.comp.selected },
     qtyIncluded() {
       return this.isDeluxe ? this.comp.info.qty_free_deluxe : this.comp.info.qty_free
     },
@@ -86,7 +88,7 @@ Vue.component('food-component', {
 Vue.component('food-dropdown', {
   props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'addBtn', 'index', 'comp'],
   template: `<div class="dropdown-wrapper">
-                <div @click="isOpen = !isOpen" class="dropdown">
+                <div @click="isOpen = !isOpen" :class="{noSelection: selectedOption == null}" class="dropdown">
                   {{label}}
                   <span class="arrow-down-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" viewBox="0 0 24 24" class="icon-cheveron-selection"><path class="secondary" fill-rule="evenodd" d="M8.7 9.7a1 1 0 1 1-1.4-1.4l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.4L12 6.42l-3.3 3.3zm6.6 4.6a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z"/></svg>
@@ -184,18 +186,23 @@ var shabbosPackageMixin = {
     return {
       packageName: null,
       packageId: null,
-      basePrice: null,
+      basePrice: {
+        basic: 0,
+        deluxe: 0
+      },
       packageData: {},
       selectedPackage: 'Basic',
       addToCartUrl: '',
     }
   },
   computed: {
+    isDeluxe() { return this.selectedPackage == 'Deluxe' },
     totalPrice() {
-      let sum = this.basePrice
+      let isDeluxe = this.selectedPackage == 'Deluxe'
+      let sum = isDeluxe ? this.basePrice.deluxe : this.basePrice.basic
       for (let section in this.packageData) {
         for (let comp in this.packageData[section]) {
-          let qtyFree = this.packageData[section][comp].info.qty_free
+          let qtyFree = this.packageData[section][comp].info[isDeluxe ? 'qty_free_deluxe' : 'qty_free']
           let extras = this.packageData[section][comp].selected.slice(qtyFree)
           extras.forEach(id => {
             if (this.packageData[section][comp].items[id]) {
@@ -241,7 +248,10 @@ var shabbosPackageMixin = {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
     this.packageName = package_data.package_name
     this.packageId = package_data.package_id
-    this.basePrice = Number(package_data.price)
+    this.basePrice = {
+      basic: Number(package_data.price),
+      deluxe: Number(package_data.deluxe_price),
+    }
     this.addToCartUrl = package_data.addToCartUrl
     this.packageData = package_data.sections_items
     console.log(this.$data);

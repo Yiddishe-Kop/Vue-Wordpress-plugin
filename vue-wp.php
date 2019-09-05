@@ -53,6 +53,7 @@ function vue_output_menu_packages($product, $sections) {
         'qty_min' => esc_attr(get_post_meta($product_id, 'wooco_qty_min', true)),
         'qty_max' => esc_attr(get_post_meta($product_id, 'wooco_qty_max', true)),
         'price' => $product->get_price(),
+        'deluxe_price' => get_post_meta($product_id, '_deluxe_price', true),
         'pricing' => $product->get_pricing(),
         'addToCartUrl' => $product->add_to_cart_url(),
         'sections_items' => $package_sections_items,
@@ -79,7 +80,8 @@ function vue_output_menu_packages($product, $sections) {
           :comp="component"
           :in-package="packageName"
           :in-section="sectionTitle"
-          :is-deluxe="selectedPackage == 'Deluxe'"
+          :is-deluxe="isDeluxe"
+          v-if="component.info.deluxe_only != 'yes' || isDeluxe"
         >
           <transition-group name="slide-in">
             <div v-for="(sel, j) in component.selected" :key="componentName + j" class="food-line">
@@ -97,7 +99,7 @@ function vue_output_menu_packages($product, $sections) {
                     :key="item.id"
                     :image="item.image"
                     :name="item.name"
-                    :price="j+1 > component.info.qty_free ? item.price : null"
+                    :price="j+1 > component.info[isDeluxe ? 'qty_free_deluxe' : 'qty_free'] ? item.price : null"
                     :in-package="packageName"
                     :in-section="sectionTitle"
                     :in-component="componentName"
@@ -112,6 +114,7 @@ function vue_output_menu_packages($product, $sections) {
       </meal-section>
       <form :action="addToCartUrl" method="post" enctype="multipart/form-data" class="summary">
         <input name="wooco_ids" type="hidden" :value="wooco_ids">
+        <input name="is_deluxe" type="hidden" :value="isDeluxe">
         <input name="wooco_total" type="hidden" :value="totalPrice">
         <div class="spacer"></div>
         <span class="total">Total: <b>${{totalPrice}}</b></span>

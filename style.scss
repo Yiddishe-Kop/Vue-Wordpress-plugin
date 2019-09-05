@@ -107,6 +107,11 @@
       background-color: var(--grey1);
       box-shadow: var(--shaddow);
       border-top: 2px solid var(--grey5);
+      .empty {
+        color: var(--grey4);
+        padding: 15px 0;
+        text-align: center;
+      }
     }
   }
 

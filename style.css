@@ -118,6 +118,12 @@
   border-top: 2px solid var(--grey5);
 }
 
+.vue-app .meal-section .section-details .empty {
+  color: var(--grey4);
+  padding: 15px 0;
+  text-align: center;
+}
+
 .vue-app .food-component {
   width: 100%;
   display: -webkit-box;
