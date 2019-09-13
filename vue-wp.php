@@ -20,7 +20,6 @@ function func_load_vuescripts() {
 }
 add_action('wp_enqueue_scripts', 'func_load_vuescripts');
 
-//Add shortscode
 function vue_output_menu_packages($product, $sections) {
 
     $product_id = $product->get_id();
@@ -71,6 +70,7 @@ function vue_output_menu_packages($product, $sections) {
         label2="Deluxe"
         :selected-val="selectedPackage"
       ></deluxe-switch>
+      <h4><b class="pill price">${{totalPrice}}</b></h4>
       <meal-section v-for="(section, sectionTitle) in packageData" :key="sectionTitle" :title="sectionTitle" :section="section">
         <food-component
           v-for="(component, componentName) in section"
@@ -116,8 +116,12 @@ function vue_output_menu_packages($product, $sections) {
         <input name="wooco_ids" type="hidden" :value="wooco_ids">
         <input name="is_deluxe" type="hidden" :value="isDeluxe">
         <input name="wooco_total" type="hidden" :value="totalPrice">
+        <i class="icon flaticon-users"></i>
+        <input name="quantity" type="number" min="2" v-model="quantity" class="form-control">
+        <i class="icon flaticon-calendar"></i>
+        <input type="text" class="form-control datepicker">
         <div class="spacer"></div>
-        <span class="total">Total: <b>${{totalPrice}}</b></span>
+        <span class="total">Total: <b>${{totalPrice * quantity}}</b></span>
         <button-cta type="submit" name="add-to-cart" :value="packageId">Add to Cart</button-cta>
       </form>
     </div>

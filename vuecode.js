@@ -30,7 +30,7 @@ Vue.component('deluxe-switch', {
 Vue.component('meal-section', {
   props: ['title', 'section'],
   template: `<div v-if="Object.keys(section).length" class="meal-section">
-              <h3 class="section-title b">{{title}}</h3>
+              <h3 class="section-title">{{title}}</h3>
               <div class="section-details">
                 <slot>
                   <p class="empty"><small>Nothing here</small><br>Try the Deluxe Package!</p>
@@ -53,8 +53,8 @@ Vue.component('food-component', {
                 </div>
 
                 <div class="component-pills">
-                  <pill class="green">{{qtyIncluded}} included</pill>
-                  <pill class="red" v-if="addedCost">+\${{addedCost}}</pill>
+                  <pill>{{qtyIncluded}} included</pill>
+                  <pill class="green" v-if="addedCost">+\${{addedCost}}</pill>
                 </div>
               </div>`,
   data() {
@@ -88,7 +88,7 @@ Vue.component('food-component', {
 Vue.component('food-dropdown', {
   props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'addBtn', 'index', 'comp'],
   template: `<div class="dropdown-wrapper">
-                <div @click="isOpen = !isOpen" :class="{noSelection: selectedOption == null}" class="dropdown">
+                <div @click="isOpen = !isOpen" :class="{noSelection: selectedOption == null}" class="dropdown" ref="dropdownMenu">
                   {{label}}
                   <span class="arrow-down-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" viewBox="0 0 24 24" class="icon-cheveron-selection"><path class="secondary" fill-rule="evenodd" d="M8.7 9.7a1 1 0 1 1-1.4-1.4l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.4L12 6.42l-3.3 3.3zm6.6 4.6a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z"/></svg>
@@ -131,9 +131,17 @@ Vue.component('food-dropdown', {
         section: this.inSection,
         component: this.inComponent,
       })
+    },
+    documentClick(e) {
+      let el = this.$refs.dropdownMenu
+      let target = e.target
+      if ((el !== target) && !el.contains(target)) {
+        this.isOpen = false
+      }
     }
   },
   created() {
+    document.addEventListener('click', this.documentClick)
     vEvent.$on(`${this.inPackage}foodoptionselect`, data => {
       if (data.package == this.inPackage
         && data.section == this.inSection
@@ -153,6 +161,9 @@ Vue.component('food-dropdown', {
         index: this.index,
       })
     }
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.documentClick)
   }
 })
 
@@ -192,6 +203,7 @@ var shabbosPackageMixin = {
       },
       packageData: {},
       selectedPackage: 'Basic',
+      quantity: 2,
       addToCartUrl: '',
     }
   },

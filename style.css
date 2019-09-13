@@ -86,25 +86,35 @@
   left: 5px;
   height: 35px;
   width: 100px;
-  background-color: var(--grey7);
+  background-color: var(--brand);
   border-radius: 50em;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 
 .vue-app .pricing-switcher .switch.move {
-  background-color: var(--brand);
   -webkit-transform: translateX(100px);
           transform: translateX(100px);
 }
 
+.vue-app h4 {
+  text-align: center;
+  margin: 15px auto;
+}
+
+.vue-app h4 .pill.price {
+  float: none;
+}
+
 .vue-app .meal-section {
-  margin-top: 15px;
+  margin-top: 25px;
 }
 
 .vue-app .meal-section .section-title {
-  color: var(--grey5);
-  padding-left: 10px;
+  color: var(--grey7);
+  padding-left: 20px;
+  font-family: jubilat;
+  font-weight: 100;
   margin: 0;
 }
 
@@ -113,8 +123,7 @@
   width: 100%;
   min-height: 50px;
   background-color: var(--grey1);
-  -webkit-box-shadow: var(--shaddow);
-          box-shadow: var(--shaddow);
+  border-bottom: 2px solid var(--grey3);
   border-top: 2px solid var(--grey5);
 }
 
@@ -132,7 +141,7 @@
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   padding: 10px 20px;
-  border-bottom: 5px solid var(--grey3);
+  border-bottom: 2px solid var(--grey3);
   -webkit-transition: all 0.3s ease-in;
   transition: all 0.3s ease-in;
 }
@@ -261,6 +270,7 @@
   margin: 8px 5px 5px 0;
   white-space: nowrap;
   float: right;
+  text-decoration: none;
 }
 
 .vue-app .pill.green {
@@ -273,11 +283,11 @@
   color: var(--red);
 }
 
-.vue-app .summary {
+.vue-app form.summary {
   margin: 30px 0;
   padding: 8px;
-  border-top: 2px solid var(--grey3);
-  border-bottom: 2px solid var(--grey3);
+  background-color: var(--grey4);
+  border-radius: 0 0 8px 8px;
   font-size: 22px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -287,22 +297,51 @@
           align-items: center;
 }
 
-.vue-app .summary .spacer {
+.vue-app form.summary i.icon {
+  margin: 0 4px 0 8px;
+}
+
+.vue-app form.summary input.form-control {
+  background-color: var(--grey2);
+}
+
+.vue-app form.summary input[name="quantity"] {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 60px;
+          flex: 0 0 60px;
+}
+
+.vue-app form.summary input.datepicker {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 120px;
+          flex: 0 0 120px;
+  padding: 0.375rem 0.75rem;
+}
+
+.vue-app form.summary .spacer {
   -webkit-box-flex: 2;
       -ms-flex: 2 1;
           flex: 2 1;
 }
 
-.vue-app .summary .total {
+.vue-app form.summary .total {
   color: var(--grey5);
 }
 
-.vue-app .summary .total b {
+.vue-app form.summary .total b {
   color: var(--grey8);
 }
 
-.vue-app .summary button {
+.vue-app form.summary button {
   padding: 2px 16px;
+}
+
+.vue-app svg .primary {
+  fill: var(--grey4);
+}
+
+.vue-app svg .secondary {
+  fill: var(--grey7);
 }
 
 .slide-in-enter-active,
