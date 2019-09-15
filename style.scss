@@ -2,6 +2,57 @@
   #wpData {
     display: none;
   }
+
+  .package-wrapper {
+    margin: 0 auto 60px;
+    box-shadow: var(--shaddow);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+
+    img.package-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .pill.stock-alert {
+      position: absolute;
+      top: 2px;
+      right: 5px;
+
+      display: flex;
+      align-items: center;
+      .icon {
+        height: 1.2em;
+        padding-left: 0;
+        padding-right: 8px;
+        .primary {
+          fill: var(--red5);
+        }
+        .secondary {
+          fill: var(--red1);
+        }
+      }
+    }
+
+    .package-info {
+      text-align: center;
+      .package-title {
+        margin: -25px auto 10px;
+        span {
+          display: inline-block;
+          padding: 0px 20px 11px;
+          border-radius: 8px;
+          background-color: var(--bg);
+          line-height: 0.8;
+          font-size: 4rem;
+        }
+      }
+    }
+  }
+
   margin: 10px auto;
   button {
     outline: 0;
@@ -91,11 +142,39 @@
     }
   }
 
-  h4 {
+  h4.top-summary {
     text-align: center;
-    margin: 15px auto;
-    .pill.price {
+    margin: 25px auto;
+    font-family: jubilat, lato, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      font-family: lato, sans-serif;
+      padding: 0 12px;
+    }
+    .price {
       float: none;
+      font-weight: normal;
+      &.green {
+        color: var(--green);
+      }
+    }
+    input {
+      display: inline-block;
+      width: 50px;
+      height: 35px;
+      padding: 0 5px;
+      border: none;
+      font-size: 22px;
+      background-color: var(--grey2);
+    }
+    .total {
+      float: none;
+    }
+    button {
+      padding: 4px 16px;
+      margin-left: 14px;
     }
   }
 
@@ -162,13 +241,17 @@
   .dropdown-wrapper {
     position: relative;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
     .dropdown {
       display: inline-block;
       background-color: var(--grey3);
       border: 1px solid transparent;
       border-radius: 8px;
       width: 220px;
-      padding: 4px 10px;
+      padding: 4px 20px 4px 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       margin-right: 5px;
       cursor: pointer;
       transition: all 0.3s ease-in;
@@ -177,7 +260,9 @@
       }
       .arrow-down-icon {
         color: var(--brand);
-        float: right;
+        position: absolute;
+        right: 3px;
+        top: 3px;
       }
     }
 
@@ -242,7 +327,7 @@
   }
 
   form.summary {
-    margin: 30px 0;
+    margin: 30px 0 0;
     padding: 8px;
     background-color: var(--grey4);
     // border-top: 2px solid var(--grey2);
@@ -250,6 +335,7 @@
     border-radius: 0 0 8px 8px;
     font-size: 22px;
     display: flex;
+    flex-direction: row !important;
     align-items: center;
     i.icon {
       margin: 0 4px 0 8px;

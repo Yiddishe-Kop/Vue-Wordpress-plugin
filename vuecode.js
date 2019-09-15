@@ -197,6 +197,11 @@ var shabbosPackageMixin = {
     return {
       packageName: null,
       packageId: null,
+      stock: {
+        manage: false,
+        inStock: true,
+        qty: 0
+      },
       basePrice: {
         basic: 0,
         deluxe: 0
@@ -254,18 +259,27 @@ var shabbosPackageMixin = {
               this.packageData[section][component].selected_deluxe;
         }
       }
+    },
+    triggerAddToCart() {
+      this.$refs.addToCartBtn.$el.click();
     }
   },
   mounted() {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
     this.packageName = package_data.package_name
     this.packageId = package_data.package_id
+    this.stock = {
+      manage: package_data.manage_stock,
+      inStock: package_data.is_in_stock,
+      qty: package_data.stock_qty,
+    }
     this.basePrice = {
       basic: Number(package_data.price),
       deluxe: Number(package_data.deluxe_price),
     }
     this.addToCartUrl = package_data.addToCartUrl
     this.packageData = package_data.sections_items
+    console.log(package_data);
     console.log(this.$data);
     console.log(package_data.addToCartUrl);
 

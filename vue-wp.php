@@ -56,82 +56,119 @@ function vue_output_menu_packages($product, $sections) {
         'pricing' => $product->get_pricing(),
         'addToCartUrl' => $product->add_to_cart_url(),
         'sections_items' => $package_sections_items,
+        'manage_stock' => 1 == $product->get_manage_stock(),
+        'is_in_stock' => $product->is_in_stock(),
+        'stock_qty' => $product->get_stock_quantity(),
+        'backorders_allowed' => $product->backorders_allowed(),
+
     ];
 
     // echo '<pre>' . print_r($package_sections_items, true) . '</pre>';
 
     ?>
-    <div class="vue-app ui-font" id="vue-app-<?php echo $product_id ?>">
-      <pre id="wpData" ref="packageData"><?php echo wp_json_encode($package_data) ?></pre>
-      <deluxe-switch
-        @change="onDeluxeChange"
-        id="<?php echo $product_id ?>"
-        label1="Basic"
-        label2="Deluxe"
-        :selected-val="selectedPackage"
-      ></deluxe-switch>
-      <h4><b class="pill price">${{totalPrice}}</b></h4>
-      <meal-section v-for="(section, sectionTitle) in packageData" :key="sectionTitle" :title="sectionTitle" :section="section">
-        <food-component
-          v-for="(component, componentName) in section"
-          :key="componentName"
-          :title="componentName"
-          :desc="component.info.desc"
-          :comp="component"
-          :in-package="packageName"
-          :in-section="sectionTitle"
-          :is-deluxe="isDeluxe"
-          v-if="component.info.deluxe_only != 'yes' || isDeluxe"
-        >
-          <transition-group name="slide-in">
-            <div v-for="(sel, j) in component.selected" :key="componentName + j" class="food-line">
-                <food-dropdown
-                  empty-text="Please choose..."
-                  :in-package="packageName"
-                  :in-section="sectionTitle"
-                  :in-component="componentName"
-                  :index="j"
-                  :add-btn="component.info.custom_qty == 'yes' && j == component.selected.length - 1"
-                  :comp="component"
-                >
-                  <dropdown-item
-                    v-for="(item, i) in component.items"
-                    :key="item.id"
-                    :image="item.image"
-                    :name="item.name"
-                    :price="j+1 > component.info[isDeluxe ? 'qty_free_deluxe' : 'qty_free'] ? item.price : null"
+  <div class="vue-app ui-font" id="vue-app-<?php echo $product_id ?>">
+    <pre id="wpData" ref="packageData"><?php echo wp_json_encode($package_data) ?></pre>
+
+      <section class="package-wrapper">
+        <?php $image_id = $product->get_image_id();
+    if ($image_id) {
+        $html = wp_get_attachment_image($image_id, 'large', false, ['class' => 'package-image']);
+    } else {
+        $html = '<div class="woocommerce-product-gallery__image--placeholder">';
+        $html .= sprintf('<img src="%s" alt="%s" class="wp-post-image" />', esc_url(wc_placeholder_img_src('woocommerce_single')), esc_html__('Awaiting product image', 'woocommerce'));
+        $html .= '</div>';
+    }
+    echo apply_filters('woocommerce_single_product_image_thumbnail_html', $html, $image_id);?>
+
+      <pill v-if="stock.manage && stock.qty < 5" class="red stock-alert">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon"><path class="primary" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20z"/><path class="secondary" d="M12 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm1-5.9c-.13 1.2-1.88 1.2-2 0l-.5-5a1 1 0 0 1 1-1.1h1a1 1 0 0 1 1 1.1l-.5 5z"/></svg>
+        Hurry! only {{stock.qty}} available
+      </pill>
+
+      <div class="package-info">
+        <h1 class="package-title serif thin smcp"><span><?php echo $product->get_name() ?></span></h1>
+        <p><?php echo $product->get_description() ?></p>
+      </div>
+
+        <deluxe-switch
+          @change="onDeluxeChange"
+          id="<?php echo $product_id ?>"
+          label1="Basic"
+          label2="Deluxe"
+          :selected-val="selectedPackage"
+        ></deluxe-switch>
+
+        <h4 class="top-summary">
+          <b :class="{green: isDeluxe}" class="price">${{totalPrice}}</b>
+            <span> &times; </span>
+            <input name="quantity" type="number" min="2" v-model="quantity" class="form-control sb">
+            <span> = </span>
+          <b class="total b">${{totalPrice * quantity}}</b>
+          <button-cta @click="triggerAddToCart" name="add-to-cart">Add to Cart</button-cta>
+        </h4>
+
+        <meal-section v-for="(section, sectionTitle) in packageData" :key="sectionTitle" :title="sectionTitle" :section="section">
+          <food-component
+            v-for="(component, componentName) in section"
+            :key="componentName"
+            :title="componentName"
+            :desc="component.info.desc"
+            :comp="component"
+            :in-package="packageName"
+            :in-section="sectionTitle"
+            :is-deluxe="isDeluxe"
+            v-if="component.info.deluxe_only != 'yes' || isDeluxe"
+          >
+            <transition-group name="slide-in">
+              <div v-for="(sel, j) in component.selected" :key="componentName + j" class="food-line">
+                  <food-dropdown
+                    empty-text="Please choose..."
                     :in-package="packageName"
                     :in-section="sectionTitle"
                     :in-component="componentName"
-                    :item-id="item.id"
                     :index="j"
+                    :add-btn="component.info.custom_qty == 'yes' && j == component.selected.length - 1"
+                    :comp="component"
                   >
-                  </dropdown-item>
-                </food-dropdown>
-              </div>
-          </transition-group>
-        </food-component>
-      </meal-section>
-      <form :action="addToCartUrl" method="post" enctype="multipart/form-data" class="summary">
-        <input name="wooco_ids" type="hidden" :value="wooco_ids">
-        <input name="is_deluxe" type="hidden" :value="isDeluxe">
-        <input name="wooco_total" type="hidden" :value="totalPrice">
-        <i class="icon flaticon-users"></i>
-        <input name="quantity" type="number" min="2" v-model="quantity" class="form-control">
-        <i class="icon flaticon-calendar"></i>
-        <input type="text" class="form-control datepicker">
-        <div class="spacer"></div>
-        <span class="total">Total: <b>${{totalPrice * quantity}}</b></span>
-        <button-cta type="submit" name="add-to-cart" :value="packageId">Add to Cart</button-cta>
-      </form>
-    </div>
+                    <dropdown-item
+                      v-for="(item, i) in component.items"
+                      :key="item.id"
+                      :image="item.image"
+                      :name="item.name"
+                      :price="j+1 > component.info[isDeluxe ? 'qty_free_deluxe' : 'qty_free'] ? item.price : null"
+                      :in-package="packageName"
+                      :in-section="sectionTitle"
+                      :in-component="componentName"
+                      :item-id="item.id"
+                      :index="j"
+                    >
+                    </dropdown-item>
+                  </food-dropdown>
+                </div>
+            </transition-group>
+          </food-component>
+        </meal-section>
+        <form :action="addToCartUrl" method="post" enctype="multipart/form-data" class="summary">
+          <input name="wooco_ids" type="hidden" :value="wooco_ids">
+          <input name="is_deluxe" type="hidden" :value="isDeluxe">
+          <input name="wooco_total" type="hidden" :value="totalPrice">
+          <i class="icon flaticon-users"></i>
+          <input name="quantity" type="number" min="2" v-model="quantity" class="form-control">
+          <i class="icon flaticon-calendar"></i>
+          <input type="text" class="form-control datepicker">
+          <div class="spacer"></div>
+          <span class="total">Total: <b>${{totalPrice * quantity}}</b></span>
+          <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>
+        </form>
+      </div>
 
-    <script>
-      let app<?php echo $product_id ?> = new Vue({
-        el: '#vue-app-<?php echo $product_id ?>',
-        mixins: [shabbosPackageMixin]
-      })
-    </script>
+      <script>
+        let app<?php echo $product_id ?> = new Vue({
+          el: '#vue-app-<?php echo $product_id ?>',
+          mixins: [shabbosPackageMixin]
+        })
+      </script>
+    </section>
     <?php
 }
 

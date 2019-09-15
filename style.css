@@ -6,6 +6,67 @@
   display: none;
 }
 
+.vue-app .package-wrapper {
+  margin: 0 auto 60px;
+  -webkit-box-shadow: var(--shaddow);
+          box-shadow: var(--shaddow);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.vue-app .package-wrapper img.package-image {
+  width: 100%;
+  height: 180px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+
+.vue-app .package-wrapper .pill.stock-alert {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.vue-app .package-wrapper .pill.stock-alert .icon {
+  height: 1.2em;
+  padding-left: 0;
+  padding-right: 8px;
+}
+
+.vue-app .package-wrapper .pill.stock-alert .icon .primary {
+  fill: var(--red5);
+}
+
+.vue-app .package-wrapper .pill.stock-alert .icon .secondary {
+  fill: var(--red1);
+}
+
+.vue-app .package-wrapper .package-info {
+  text-align: center;
+}
+
+.vue-app .package-wrapper .package-info .package-title {
+  margin: -25px auto 10px;
+}
+
+.vue-app .package-wrapper .package-info .package-title span {
+  display: inline-block;
+  padding: 0px 20px 11px;
+  border-radius: 8px;
+  background-color: var(--bg);
+  line-height: 0.8;
+  font-size: 4rem;
+}
+
 .vue-app button {
   outline: 0;
   -webkit-transition: all 0.3s ease;
@@ -97,13 +158,52 @@
           transform: translateX(100px);
 }
 
-.vue-app h4 {
+.vue-app h4.top-summary {
   text-align: center;
-  margin: 15px auto;
+  margin: 25px auto;
+  font-family: jubilat, lato, sans-serif;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
-.vue-app h4 .pill.price {
+.vue-app h4.top-summary span {
+  font-family: lato, sans-serif;
+  padding: 0 12px;
+}
+
+.vue-app h4.top-summary .price {
   float: none;
+  font-weight: normal;
+}
+
+.vue-app h4.top-summary .price.green {
+  color: var(--green);
+}
+
+.vue-app h4.top-summary input {
+  display: inline-block;
+  width: 50px;
+  height: 35px;
+  padding: 0 5px;
+  border: none;
+  font-size: 22px;
+  background-color: var(--grey2);
+}
+
+.vue-app h4.top-summary .total {
+  float: none;
+}
+
+.vue-app h4.top-summary button {
+  padding: 4px 16px;
+  margin-left: 14px;
 }
 
 .vue-app .meal-section {
@@ -184,6 +284,12 @@
 .vue-app .dropdown-wrapper {
   position: relative;
   white-space: nowrap;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .vue-app .dropdown-wrapper .dropdown {
@@ -192,7 +298,9 @@
   border: 1px solid transparent;
   border-radius: 8px;
   width: 220px;
-  padding: 4px 10px;
+  padding: 4px 20px 4px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   margin-right: 5px;
   cursor: pointer;
   -webkit-transition: all 0.3s ease-in;
@@ -205,7 +313,9 @@
 
 .vue-app .dropdown-wrapper .dropdown .arrow-down-icon {
   color: var(--brand);
-  float: right;
+  position: absolute;
+  right: 3px;
+  top: 3px;
 }
 
 .vue-app .dropdown-wrapper .dropdown-options {
@@ -284,7 +394,7 @@
 }
 
 .vue-app form.summary {
-  margin: 30px 0;
+  margin: 30px 0 0;
   padding: 8px;
   background-color: var(--grey4);
   border-radius: 0 0 8px 8px;
@@ -292,6 +402,10 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal !important;
+  -webkit-box-direction: normal !important;
+      -ms-flex-direction: row !important;
+          flex-direction: row !important;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
