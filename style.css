@@ -12,7 +12,6 @@
           box-shadow: var(--shaddow);
   border-radius: 8px;
   position: relative;
-  overflow: hidden;
 }
 
 .vue-app .package-wrapper img.package-image {
@@ -22,6 +21,7 @@
      object-fit: cover;
   -o-object-position: center;
      object-position: center;
+  border-radius: 8px 8px 0 0;
 }
 
 .vue-app .package-wrapper .pill.stock-alert {
@@ -290,6 +290,10 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .vue-app .dropdown-wrapper .dropdown {
@@ -318,6 +322,11 @@
   top: 3px;
 }
 
+.vue-app .dropdown-wrapper .dropdown.noSelection {
+  color: var(--grey5);
+  background-color: var(--grey1);
+}
+
 .vue-app .dropdown-wrapper .dropdown-options {
   -webkit-transform-origin: top center;
           transform-origin: top center;
@@ -326,6 +335,7 @@
   width: fit-content;
   min-width: 220px;
   position: absolute;
+  top: 35px;
   z-index: 100;
   background-color: var(--grey3);
   padding: 2px 5px;
@@ -450,12 +460,26 @@
   padding: 2px 16px;
 }
 
+.vue-app svg {
+  -webkit-transition: all 0.25s ease-in;
+  transition: all 0.25s ease-in;
+}
+
 .vue-app svg .primary {
   fill: var(--grey4);
 }
 
 .vue-app svg .secondary {
   fill: var(--grey7);
+}
+
+.vue-app svg:hover {
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+}
+
+.vue-app svg:hover .secondary {
+  fill: var(--brand);
 }
 
 .slide-in-enter-active,

@@ -8,13 +8,13 @@
     box-shadow: var(--shaddow);
     border-radius: 8px;
     position: relative;
-    overflow: hidden;
 
     img.package-image {
       width: 100%;
       height: 180px;
       object-fit: cover;
       object-position: center;
+      border-radius: 8px 8px 0 0;
     }
 
     .pill.stock-alert {
@@ -243,6 +243,7 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
+    user-select: none;
     .dropdown {
       display: inline-block;
       background-color: var(--grey3);
@@ -264,6 +265,10 @@
         right: 3px;
         top: 3px;
       }
+      &.noSelection {
+        color: var(--grey5);
+        background-color: var(--grey1);
+      }
     }
 
     .dropdown-options {
@@ -271,6 +276,7 @@
       width: fit-content;
       min-width: 220px;
       position: absolute;
+      top: 35px;
       z-index: 100;
       background-color: var(--grey3);
       padding: 2px 5px;
@@ -366,11 +372,18 @@
 
   // svg icons ====================================================
   svg {
+    transition: all 0.25s ease-in;
     .primary {
       fill: var(--grey4);
     }
     .secondary {
       fill: var(--grey7);
+    }
+    &:hover {
+      transform: scale(1.2);
+      .secondary {
+        fill: var(--brand);
+      }
     }
   }
 }

@@ -63,7 +63,7 @@ Vue.component('food-component', {
     }
   },
   computed: {
-    selected() { return this.comp.selected },
+    selected() { return this.comp[this.isDeluxe ? 'selected_deluxe' : 'selected_basic'] },
     qtyIncluded() {
       return this.isDeluxe ? this.comp.info.qty_free_deluxe : this.comp.info.qty_free
     },
@@ -86,9 +86,9 @@ Vue.component('food-component', {
 })
 
 Vue.component('food-dropdown', {
-  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'addBtn', 'index', 'comp'],
+  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'selection', 'addBtn', 'index', 'comp', 'isDeluxe'],
   template: `<div class="dropdown-wrapper">
-                <div @click="isOpen = !isOpen" :class="{noSelection: selectedOption == null}" class="dropdown" ref="dropdownMenu">
+                <div @click="isOpen = !isOpen" :class="{noSelection: !selection}" class="dropdown" ref="dropdownMenu">
                   {{label}}
                   <span class="arrow-down-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" viewBox="0 0 24 24" class="icon-cheveron-selection"><path class="secondary" fill-rule="evenodd" d="M8.7 9.7a1 1 0 1 1-1.4-1.4l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.4L12 6.42l-3.3 3.3zm6.6 4.6a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z"/></svg>
@@ -102,19 +102,22 @@ Vue.component('food-dropdown', {
                 <button-cta v-if="addBtn" @click="addLine" class="only-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-add-circle"><circle cx="12" cy="12" r="10" class="primary"/><path class="secondary" d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"/></svg>
                 </button-cta>
-                <button-cta v-if="addBtn && comp.selected.length > 1" @click="removeLine" class="only-icon">
+                <button-cta v-if="addBtn && comp[isDeluxe? 'selected_deluxe' : 'selected_basic'].length > 1" @click="removeLine" class="only-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-remove-circle"><circle cx="12" cy="12" r="10" class="primary"/><rect width="12" height="2" x="6" y="11" class="secondary" rx="1"/></svg>
                 </button-cta>
               </div>`,
   data() {
     return {
       isOpen: false,
-      selectedOption: null,
     }
   },
   computed: {
     label() {
-      return this.selectedOption || this.emptyText
+      if (this.selection) {
+        return this.comp.items[this.selection].name
+      } else {
+        return this.emptyText
+      }
     }
   },
   methods: {
@@ -142,25 +145,6 @@ Vue.component('food-dropdown', {
   },
   created() {
     document.addEventListener('click', this.documentClick)
-    vEvent.$on(`${this.inPackage}foodoptionselect`, data => {
-      if (data.package == this.inPackage
-        && data.section == this.inSection
-        && data.component == this.inComponent
-        && data.index == this.index)
-        this.selectedOption = data.itemName
-      this.isOpen = false
-    })
-    if (this.comp.info.default) { // selects default option
-      let defaultId = this.comp.info.default
-      vEvent.$emit(`${this.inPackage}foodoptionselect`, {
-        package: this.inPackage,
-        section: this.inSection,
-        component: this.inComponent,
-        itemName: this.comp.items[defaultId].name,
-        itemId: defaultId,
-        index: this.index,
-      })
-    }
   },
   beforeDestroy() {
     document.removeEventListener('click', this.documentClick)
@@ -179,7 +163,6 @@ Vue.component('dropdown-item', {
              </div>`,
   methods: {
     onSelect() {
-      // console.log(`${this.inPackage}foodOptionSelect`)
       vEvent.$emit(`${this.inPackage}foodoptionselect`, {
         package: this.inPackage,
         section: this.inSection,
@@ -214,13 +197,14 @@ var shabbosPackageMixin = {
   },
   computed: {
     isDeluxe() { return this.selectedPackage == 'Deluxe' },
+    selectedVarName() { return this.isDeluxe ? 'selected_deluxe' : 'selected_basic' },
     totalPrice() {
       let isDeluxe = this.selectedPackage == 'Deluxe'
       let sum = isDeluxe ? this.basePrice.deluxe : this.basePrice.basic
       for (let section in this.packageData) {
         for (let comp in this.packageData[section]) {
           let qtyFree = this.packageData[section][comp].info[isDeluxe ? 'qty_free_deluxe' : 'qty_free']
-          let extras = this.packageData[section][comp].selected.slice(qtyFree)
+          let extras = this.packageData[section][comp][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'].slice(qtyFree)
           extras.forEach(id => {
             if (this.packageData[section][comp].items[id]) {
               sum += Number(this.packageData[section][comp].items[id].price)
@@ -231,20 +215,29 @@ var shabbosPackageMixin = {
       return sum
     },
     wooco_ids() {
-      let selectedIds = []
+      let selectedIds = {}
       for (let section in this.packageData) {
         for (let comp in this.packageData[section]) {
-          let sel = this.packageData[section][comp].selected
+          let sel = this.packageData[section][comp][this.isDeluxe ? 'selected_deluxe' : 'selected_basic']
           sel.forEach(id => {
             if (id) { // not null
-              selectedIds.push(id + '/' + 1) // = ID/QTY
+              if (!selectedIds.hasOwnProperty(id)) {
+                selectedIds[id] = 1
+              } else {
+                selectedIds[id] += 1
+              }
             }
           })
         }
       }
-      console.log('wooco_ids', selectedIds.join(','));
 
-      return selectedIds.join(',')
+      let finalIds = [];
+      for (let key in selectedIds) {
+        finalIds.push(`${key}/${selectedIds[key]}`) // = ID/QTY
+      }
+      console.log('wooco_ids', finalIds.join(','));
+
+      return finalIds.join(',')
     }
   },
   methods: {
@@ -287,16 +280,16 @@ var shabbosPackageMixin = {
     vEvent.$on(`${this.packageName}foodoptionselect`, data => {
       // console.log('Selected: ', data)
       this.$set(
-        this.packageData[data.section][data.component].selected, data.index, data.itemId
+        this.packageData[data.section][data.component][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'], data.index, data.itemId
       )
     })
     // onAddLine
     vEvent.$on(`${this.packageName}addline`, data => {
-      this.packageData[data.section][data.component].selected.push(null);
+      this.packageData[data.section][data.component][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'].push(null);
     })
     // onRemoveLine
     vEvent.$on(`${this.packageName}removeline`, data => {
-      this.packageData[data.section][data.component].selected.pop();
+      this.packageData[data.section][data.component][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'].pop();
     })
   },
 }

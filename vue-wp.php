@@ -32,9 +32,8 @@ function vue_output_menu_packages($product, $sections) {
                 continue; // only get from current section
             }
             $package_sections_items[$section_name][$wooco_component['name']]['info'] = $wooco_component;
-            $package_sections_items[$section_name][$wooco_component['name']]['selected'] = array_fill(0, (int) $wooco_component['qty_free'], null); // preselects qty free
-            $package_sections_items[$section_name][$wooco_component['name']]['selected_basic'] = array_fill(0, (int) $wooco_component['qty_free'], null); // preselects qty free
-            $package_sections_items[$section_name][$wooco_component['name']]['selected_deluxe'] = array_fill(0, (int) $wooco_component['qty_free_deluxe'], null); // preselects qty free
+            $package_sections_items[$section_name][$wooco_component['name']]['selected_basic'] = array_fill(0, (int) $wooco_component['qty_free'], $wooco_component['default']); // preselects qty free
+            $package_sections_items[$section_name][$wooco_component['name']]['selected_deluxe'] = array_fill(0, (int) $wooco_component['qty_free_deluxe'], $wooco_component['default']); // preselects qty free
 
             $wooco_component_default = isset($wooco_component['default']) ? (int) $wooco_component['default'] : 0;
             $wooco_products = wooco_get_products($wooco_component['type'], $wooco_component[$wooco_component_type], $wooco_component_default);
@@ -120,15 +119,17 @@ function vue_output_menu_packages($product, $sections) {
             v-if="component.info.deluxe_only != 'yes' || isDeluxe"
           >
             <transition-group name="slide-in">
-              <div v-for="(sel, j) in component.selected" :key="componentName + j" class="food-line">
+              <div v-for="(sel, j) in component[selectedVarName]" :key="componentName + j" class="food-line">
                   <food-dropdown
                     empty-text="Please choose..."
                     :in-package="packageName"
                     :in-section="sectionTitle"
                     :in-component="componentName"
+                    :selection="component[selectedVarName][j]"
                     :index="j"
-                    :add-btn="component.info.custom_qty == 'yes' && j == component.selected.length - 1"
+                    :add-btn="component.info.custom_qty == 'yes' && j == component[selectedVarName].length - 1"
                     :comp="component"
+                    :is-deluxe="isDeluxe"
                   >
                     <dropdown-item
                       v-for="(item, i) in component.items"
