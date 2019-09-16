@@ -198,13 +198,15 @@ var shabbosPackageMixin = {
   computed: {
     isDeluxe() { return this.selectedPackage == 'Deluxe' },
     selectedVarName() { return this.isDeluxe ? 'selected_deluxe' : 'selected_basic' },
-    totalPrice() {
-      let isDeluxe = this.selectedPackage == 'Deluxe'
-      let sum = isDeluxe ? this.basePrice.deluxe : this.basePrice.basic
+    packagePrice() {
+      return this.isDeluxe ? this.basePrice.deluxe : this.basePrice.basic
+    },
+    extraPrice() {
+      let sum = 0
       for (let section in this.packageData) {
         for (let comp in this.packageData[section]) {
-          let qtyFree = this.packageData[section][comp].info[isDeluxe ? 'qty_free_deluxe' : 'qty_free']
-          let extras = this.packageData[section][comp][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'].slice(qtyFree)
+          let qtyFree = this.packageData[section][comp].info[this.isDeluxe ? 'qty_free_deluxe' : 'qty_free']
+          let extras = this.packageData[section][comp][this.selectedVarName].slice(qtyFree)
           extras.forEach(id => {
             if (this.packageData[section][comp].items[id]) {
               sum += Number(this.packageData[section][comp].items[id].price)
@@ -218,7 +220,7 @@ var shabbosPackageMixin = {
       let selectedIds = {}
       for (let section in this.packageData) {
         for (let comp in this.packageData[section]) {
-          let sel = this.packageData[section][comp][this.isDeluxe ? 'selected_deluxe' : 'selected_basic']
+          let sel = this.packageData[section][comp][this.selectedVarName]
           sel.forEach(id => {
             if (id) { // not null
               if (!selectedIds.hasOwnProperty(id)) {
@@ -280,16 +282,16 @@ var shabbosPackageMixin = {
     vEvent.$on(`${this.packageName}foodoptionselect`, data => {
       // console.log('Selected: ', data)
       this.$set(
-        this.packageData[data.section][data.component][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'], data.index, data.itemId
+        this.packageData[data.section][data.component][this.selectedVarName], data.index, data.itemId
       )
     })
     // onAddLine
     vEvent.$on(`${this.packageName}addline`, data => {
-      this.packageData[data.section][data.component][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'].push(null);
+      this.packageData[data.section][data.component][this.selectedVarName].push(null);
     })
     // onRemoveLine
     vEvent.$on(`${this.packageName}removeline`, data => {
-      this.packageData[data.section][data.component][this.isDeluxe ? 'selected_deluxe' : 'selected_basic'].pop();
+      this.packageData[data.section][data.component][this.selectedVarName].pop();
     })
   },
 }

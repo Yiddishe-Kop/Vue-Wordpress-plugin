@@ -98,11 +98,13 @@ function vue_output_menu_packages($product, $sections) {
         ></deluxe-switch>
 
         <h4 class="top-summary">
-          <b :class="{green: isDeluxe}" class="price">${{totalPrice}}</b>
+          <b :class="{green: isDeluxe}" class="price">${{packagePrice}}</b>
             <span> &times; </span>
             <input name="quantity" type="number" min="2" v-model="quantity" class="form-control sb">
+            <span v-if="extraPrice"> + </span>
+            <i v-if="extraPrice" class="extra-price">${{extraPrice}}</i>
             <span> = </span>
-          <b class="total b">${{totalPrice * quantity}}</b>
+          <b class="total b">${{(packagePrice * quantity) + extraPrice}}</b>
           <button-cta @click="triggerAddToCart" name="add-to-cart">Add to Cart</button-cta>
         </h4>
 
@@ -152,13 +154,15 @@ function vue_output_menu_packages($product, $sections) {
         <form :action="addToCartUrl" method="post" enctype="multipart/form-data" class="summary">
           <input name="wooco_ids" type="hidden" :value="wooco_ids">
           <input name="is_deluxe" type="hidden" :value="isDeluxe">
-          <input name="wooco_total" type="hidden" :value="totalPrice">
+          <input name="wooco_total" type="hidden" :value="packagePrice">
+          <input name="wooco_extra" type="hidden" :value="extraPrice">
+          <input name="quantity" type="hidden" value="1">
           <i class="icon flaticon-users"></i>
-          <input name="quantity" type="number" min="2" v-model="quantity" class="form-control">
+          <input name="wooco_people" type="number" min="2" v-model="quantity" class="form-control">
           <i class="icon flaticon-calendar"></i>
           <input type="text" class="form-control datepicker">
           <div class="spacer"></div>
-          <span class="total">Total: <b>${{totalPrice * quantity}}</b></span>
+          <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice}}</b></span>
           <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>
         </form>
       </div>

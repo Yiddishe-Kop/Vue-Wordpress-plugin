@@ -169,6 +169,9 @@
       font-size: 22px;
       background-color: var(--grey2);
     }
+    i.extra-price {
+      font-style: normal;
+    }
     .total {
       float: none;
     }
@@ -349,7 +352,7 @@
     input.form-control {
       background-color: var(--grey2);
     }
-    input[name="quantity"] {
+    input[name="wooco_people"] {
       flex: 0 0 60px;
     }
     input.datepicker {

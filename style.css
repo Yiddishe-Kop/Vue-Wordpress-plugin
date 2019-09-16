@@ -197,6 +197,10 @@
   background-color: var(--grey2);
 }
 
+.vue-app h4.top-summary i.extra-price {
+  font-style: normal;
+}
+
 .vue-app h4.top-summary .total {
   float: none;
 }
@@ -429,7 +433,7 @@
   background-color: var(--grey2);
 }
 
-.vue-app form.summary input[name="quantity"] {
+.vue-app form.summary input[name="wooco_people"] {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 60px;
           flex: 0 0 60px;
