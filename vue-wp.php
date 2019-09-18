@@ -80,7 +80,7 @@ function vue_output_menu_packages($product, $sections) {
     echo apply_filters('woocommerce_single_product_image_thumbnail_html', $html, $image_id);?>
 
       <pill v-if="stock.manage && stock.qty < 5" class="red stock-alert">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon"><path class="primary" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20z"/><path class="secondary" d="M12 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm1-5.9c-.13 1.2-1.88 1.2-2 0l-.5-5a1 1 0 0 1 1-1.1h1a1 1 0 0 1 1 1.1l-.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="1.2em" class="icon"><path class="primary" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20z"/><path class="secondary" d="M12 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm1-5.9c-.13 1.2-1.88 1.2-2 0l-.5-5a1 1 0 0 1 1-1.1h1a1 1 0 0 1 1 1.1l-.5 5z"/></svg>
         Hurry! only {{stock.qty}} available
       </pill>
 
@@ -98,14 +98,15 @@ function vue_output_menu_packages($product, $sections) {
         ></deluxe-switch>
 
         <h4 class="top-summary">
-          <b :class="{green: isDeluxe}" class="price">${{packagePrice}}</b>
+          <!-- <b :class="{green: isDeluxe}" class="price">${{packagePrice}}</b>
             <span> &times; </span>
             <input name="quantity" type="number" min="2" v-model="quantity" class="form-control sb">
             <span v-if="extraPrice"> + </span>
             <i v-if="extraPrice" class="extra-price">${{extraPrice}}</i>
             <span> = </span>
-          <b class="total b">${{(packagePrice * quantity) + extraPrice}}</b>
-          <button-cta @click="triggerAddToCart" name="add-to-cart">Add to Cart</button-cta>
+          <b class="total b">${{(packagePrice * quantity) + extraPrice}}</b> -->
+          <b class="total b">${{packagePrice}}</b>
+          <!-- <button-cta @click="triggerAddToCart" name="add-to-cart">Add to Cart</button-cta> -->
         </h4>
 
         <meal-section v-for="(section, sectionTitle) in packageData" :key="sectionTitle" :title="sectionTitle" :section="section">
@@ -160,7 +161,7 @@ function vue_output_menu_packages($product, $sections) {
           <i class="icon flaticon-users"></i>
           <input name="wooco_people" type="number" min="2" v-model="quantity" class="form-control">
           <i class="icon flaticon-calendar"></i>
-          <input type="text" class="form-control datepicker">
+          <input name="wooco_date" type="text" class="form-control datepicker">
           <div class="spacer"></div>
           <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice}}</b></span>
           <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>

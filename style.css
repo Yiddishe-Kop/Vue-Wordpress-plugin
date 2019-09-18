@@ -1,5 +1,5 @@
 .vue-app {
-  margin: 10px auto;
+  margin: 0 auto;
 }
 
 .vue-app #wpData {
@@ -8,8 +8,7 @@
 
 .vue-app .package-wrapper {
   margin: 0 auto 60px;
-  -webkit-box-shadow: var(--shaddow);
-          box-shadow: var(--shaddow);
+  background-color: var(--grey2);
   border-radius: 8px;
   position: relative;
 }
@@ -62,7 +61,7 @@
   display: inline-block;
   padding: 0px 20px 11px;
   border-radius: 8px;
-  background-color: var(--bg);
+  background-color: var(--grey2);
   line-height: 0.8;
   font-size: 4rem;
 }
@@ -107,7 +106,7 @@
   position: relative;
   padding: 5px;
   border-radius: 50em;
-  background-color: var(--grey3);
+  background-color: white;
 }
 
 .vue-app .pricing-switcher input[type="radio"] {
@@ -198,6 +197,7 @@
 }
 
 .vue-app h4.top-summary i.extra-price {
+  background-color: var(--grey1);
   font-style: normal;
 }
 

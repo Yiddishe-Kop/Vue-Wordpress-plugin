@@ -1,11 +1,14 @@
 .vue-app {
+  margin: 0 auto;
+
   #wpData {
     display: none;
   }
 
   .package-wrapper {
     margin: 0 auto 60px;
-    box-shadow: var(--shaddow);
+    // box-shadow: var(--shaddow);
+    background-color: var(--grey2);
     border-radius: 8px;
     position: relative;
 
@@ -45,7 +48,7 @@
           display: inline-block;
           padding: 0px 20px 11px;
           border-radius: 8px;
-          background-color: var(--bg);
+          background-color: var(--grey2);
           line-height: 0.8;
           font-size: 4rem;
         }
@@ -53,7 +56,6 @@
     }
   }
 
-  margin: 10px auto;
   button {
     outline: 0;
     transition: all 0.3s ease;
@@ -95,7 +97,7 @@
       position: relative;
       padding: $bg-padding;
       border-radius: 50em;
-      background-color: var(--grey3);
+      background-color: white;
     }
 
     input[type="radio"] {
@@ -170,6 +172,7 @@
       background-color: var(--grey2);
     }
     i.extra-price {
+      background-color: var(--grey1);
       font-style: normal;
     }
     .total {
