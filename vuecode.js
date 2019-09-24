@@ -156,7 +156,7 @@ Vue.component('dropdown-item', {
   props: ['name', 'price', 'image', 'inPackage', 'inSection', 'inComponent', 'itemId', 'index'],
   template: `<div @click="onSelect" class="dropdown-item">
                 <img v-if="image" :src="image">
-                <div>
+                <div class="info">
                   <h5>{{name}}</h5>
                   <p v-if="price">\${{price}}</p>
                 </div>

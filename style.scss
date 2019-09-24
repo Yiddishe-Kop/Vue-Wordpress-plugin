@@ -12,7 +12,8 @@
     border-radius: 8px;
     position: relative;
 
-    img.package-image {
+    img.package-image,
+    .wp-post-image {
       width: 100%;
       height: 180px;
       object-fit: cover;
@@ -293,12 +294,13 @@
         display: flex;
         align-items: center;
         margin: 4px 0;
-        padding: 4px 20px;
+        padding: 0;
         border-radius: 8px;
         cursor: pointer;
         background-color: var(--grey1);
         width: auto;
         user-select: none;
+        overflow: hidden;
         &:hover {
           background-color: var(--grey2);
         }
@@ -306,14 +308,16 @@
           color: inherit;
         }
         img {
-          width: 70px;
-          border-radius: 50%;
+          width: 60px;
           float: left;
           margin-right: 30px;
-          margin-left: -16px;
         }
-        h5 {
-          margin: 0;
+        .info {
+          padding: 5px 0;
+          h5,
+          p {
+            margin: 0;
+          }
         }
       }
     }
