@@ -1,3 +1,4 @@
+Vue.productionTip = false;
 window.vEvent = new Vue();
 
 Vue.component('button-cta', {
@@ -274,6 +275,10 @@ var shabbosPackageMixin = {
     }
     this.addToCartUrl = package_data.addToCartUrl
     this.packageData = package_data.sections_items
+
+    this.quantity = package_data.people || 2
+    if (package_data.date) this.$refs.dateInput.value = package_data.date
+
     console.log(package_data);
     console.log(this.$data);
     console.log(package_data.addToCartUrl);

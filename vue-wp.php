@@ -60,6 +60,8 @@ function vue_output_menu_packages($product, $sections) {
         'stock_qty' => $product->get_stock_quantity(),
         'backorders_allowed' => $product->backorders_allowed(),
 
+        'date' => isset($_GET['date']) ? $_GET['date'] : '',
+        'people' => isset($_GET['people']) ? $_GET['people'] : '',
     ];
 
     // echo '<pre>' . print_r($package_sections_items, true) . '</pre>';
@@ -73,9 +75,7 @@ function vue_output_menu_packages($product, $sections) {
     if ($image_id) {
         $html = wp_get_attachment_image($image_id, 'large', false, ['class' => 'package-image']);
     } else {
-        $html = '<div class="woocommerce-product-gallery__image--placeholder">';
-        $html .= sprintf('<img src="%s" alt="%s" class="wp-post-image" />', esc_url(wc_placeholder_img_src('woocommerce_single')), esc_html__('Awaiting product image', 'woocommerce'));
-        $html .= '</div>';
+        $html = '';
     }
     echo apply_filters('woocommerce_single_product_image_thumbnail_html', $html, $image_id);?>
 
@@ -161,7 +161,7 @@ function vue_output_menu_packages($product, $sections) {
           <i class="icon flaticon-users"></i>
           <input name="wooco_people" type="number" min="2" v-model="quantity" class="form-control">
           <i class="icon flaticon-calendar"></i>
-          <input name="wooco_date" type="text" class="form-control datepicker">
+          <input name="wooco_date" type="text" class="form-control datepicker" ref="dateInput">
           <div class="spacer"></div>
           <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice}}</b></span>
           <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>
