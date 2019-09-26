@@ -74,8 +74,8 @@ Vue.component('food-component', {
         let extras = this.selected.slice(qtyFree)
         let addedCost = 0;
         extras.forEach(id => {
-          if (this.componentData.items[id]) { // not null
-            addedCost += Number(this.componentData.items[id].price)
+          if (this.componentData.items[id.id]) { // not null
+            addedCost += Number(this.componentData.items[id.id].price) * Number(id.qty)
           }
         })
         return addedCost
@@ -87,7 +87,7 @@ Vue.component('food-component', {
 })
 
 Vue.component('food-dropdown', {
-  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'component', 'selection', 'addBtn', 'index', 'comp', 'isDeluxe', 'numOfItems'],
+  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'component', 'selection', 'addBtn', 'index', 'comp', 'isDeluxe', 'numOfItems', 'isExtra'],
   template: `<div class="dropdown-wrapper">
                 <div @click="isOpen = !isOpen" :class="{noSelection: !selection}" class="dropdown" ref="dropdownMenu">
                   {{label}}
@@ -100,6 +100,7 @@ Vue.component('food-dropdown', {
                     <slot/>
                   </div>
                 </transition>
+                <input v-if="isExtra" v-model="qty" type="number" min="1" class="form-control qty"/>
                 <button-cta v-if="addBtn" @click="addLine" class="only-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-add-circle"><circle cx="12" cy="12" r="10" class="primary"/><path class="secondary" d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"/></svg>
                 </button-cta>
@@ -111,12 +112,24 @@ Vue.component('food-dropdown', {
     return {
       isOpen: false,
       canOpenDropdown: true,
+      qty: 1,
+    }
+  },
+  watch: {
+    qty(newQty, oldQty) {
+      vEvent.$emit(`${this.inPackage}update_qty`, {
+        package: this.inPackage,
+        section: this.inSection,
+        component: this.inComponent,
+        index: this.index,
+        qty: newQty
+      })
     }
   },
   computed: {
     label() {
-      if (this.selection) {
-        return this.comp.items[this.selection].name
+      if (this.selection.id) {
+        return this.comp.items[this.selection.id].name
       } else {
         return this.emptyText
       }
@@ -170,12 +183,12 @@ Vue.component('food-dropdown', {
 
 
 Vue.component('dropdown-item', {
-  props: ['name', 'price', 'image', 'inPackage', 'inSection', 'inComponent', 'itemId', 'index'],
+  props: ['item', 'isExtra', 'inPackage', 'inSection', 'inComponent', 'index'],
   template: `<div @click="onSelect" class="dropdown-item">
-                <img v-if="image" :src="image">
+                <img v-if="item.image" :src="item.image">
                 <div class="info">
-                  <h5>{{name}}</h5>
-                  <p v-if="price">\${{price}}</p>
+                  <h5>{{item.name}}</h5>
+                  <p v-if="isExtra">\${{item.price}}</p>
                 </div>
              </div>`,
   methods: {
@@ -184,8 +197,8 @@ Vue.component('dropdown-item', {
         package: this.inPackage,
         section: this.inSection,
         component: this.inComponent,
-        itemName: this.name,
-        itemId: this.itemId,
+        itemName: this.item.name,
+        itemId: this.item.id,
         index: this.index,
       })
     }
@@ -220,18 +233,23 @@ var shabbosPackageMixin = {
     },
     extraPrice() {
       let sum = 0
+      let extraItems = []
       for (let section in this.packageData) {
         for (let comp in this.packageData[section]) {
           let qtyFree = this.packageData[section][comp].info[this.isDeluxe ? 'qty_free_deluxe' : 'qty_free']
           let extras = this.packageData[section][comp][this.selectedVarName].slice(qtyFree)
           extras.forEach(id => {
-            if (this.packageData[section][comp].items[id]) {
-              sum += Number(this.packageData[section][comp].items[id].price)
+            if (this.packageData[section][comp].items[id.id]) {
+              sum += Number(this.packageData[section][comp].items[id.id].price) * Number(id.qty)
+              extraItems.push(id.id + '/' + id.qty) // ID/QTY
             }
           })
         }
       }
-      return sum
+      return {
+        sum: sum,
+        extraItems: extraItems.join(',')
+      }
     },
     wooco_ids() {
       let selectedIds = {}
@@ -239,23 +257,20 @@ var shabbosPackageMixin = {
         for (let comp in this.packageData[section]) {
           let sel = this.packageData[section][comp][this.selectedVarName]
           sel.forEach(id => {
-            if (id) { // not null
-              if (!selectedIds.hasOwnProperty(id)) {
-                selectedIds[id] = 1
+            if (id.id) { // not null
+              if (!selectedIds.hasOwnProperty(id.id)) {
+                selectedIds[id.id] = Number(id.qty)
               } else {
-                selectedIds[id] += 1
+                selectedIds[id.id] += Number(id.qty)
               }
             }
           })
         }
       }
-
       let finalIds = [];
       for (let key in selectedIds) {
         finalIds.push(`${key}/${selectedIds[key]}`) // = ID/QTY
       }
-      console.log('wooco_ids', finalIds.join(','));
-
       return finalIds.join(',')
     }
   },
@@ -295,20 +310,24 @@ var shabbosPackageMixin = {
     this.quantity = package_data.people || 2
     if (package_data.date) this.$refs.dateInput.value = package_data.date
 
-    console.log(package_data);
     console.log(this.$data);
-    console.log(package_data.addToCartUrl);
 
-    // onDDselect
+    // on DDselect
     vEvent.$on(`${this.packageName}foodoptionselect`, data => {
       // console.log('Selected: ', data)
       this.$set(
-        this.packageData[data.section][data.component][this.selectedVarName], data.index, data.itemId
+        this.packageData[data.section][data.component][this.selectedVarName][data.index], 'id', data.itemId
+      )
+    })
+    // on update_qty
+    vEvent.$on(`${this.packageName}update_qty`, data => {
+      this.$set(
+        this.packageData[data.section][data.component][this.selectedVarName][data.index], 'qty', data.qty
       )
     })
     // onAddLine
     vEvent.$on(`${this.packageName}addline`, data => {
-      this.packageData[data.section][data.component][this.selectedVarName].push(null);
+      this.packageData[data.section][data.component][this.selectedVarName].push({id: '', qty: 1});
     })
     // onRemoveLine
     vEvent.$on(`${this.packageName}removeline`, data => {

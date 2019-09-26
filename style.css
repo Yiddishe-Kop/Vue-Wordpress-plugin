@@ -298,6 +298,16 @@
   background-color: var(--grey1);
 }
 
+.vue-app .dropdown-wrapper input.qty {
+  height: 34px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 45px;
+          flex: 0 1 45px;
+  margin-right: 6px;
+  padding: 2px 4px;
+  border-color: var(--grey4);
+}
+
 .vue-app .dropdown-wrapper .dropdown-options {
   -webkit-transform-origin: top center;
           transform-origin: top center;

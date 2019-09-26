@@ -32,8 +32,8 @@ function vue_output_menu_packages($product, $sections) {
                 continue; // only get from current section
             }
             $package_sections_items[$section_name][$wooco_component['name']]['info'] = $wooco_component;
-            $package_sections_items[$section_name][$wooco_component['name']]['selected_basic'] = array_fill(0, (int) $wooco_component['qty_free'], $wooco_component['default']); // preselects qty free
-            $package_sections_items[$section_name][$wooco_component['name']]['selected_deluxe'] = array_fill(0, (int) $wooco_component['qty_free_deluxe'], $wooco_component['default']); // preselects qty free
+            $package_sections_items[$section_name][$wooco_component['name']]['selected_basic'] = array_fill(0, (int) $wooco_component['qty_free'], array('id' => $wooco_component['default'], 'qty' => 1)); // preselects qty free
+            $package_sections_items[$section_name][$wooco_component['name']]['selected_deluxe'] = array_fill(0, (int) $wooco_component['qty_free_deluxe'], array('id' => $wooco_component['default'], 'qty' => 1)); // preselects qty free
 
             $wooco_component_default = isset($wooco_component['default']) ? (int) $wooco_component['default'] : 0;
             $wooco_products = wooco_get_products($wooco_component['type'], $wooco_component[$wooco_component_type], $wooco_component_default);
@@ -127,17 +127,16 @@ function vue_output_menu_packages($product, $sections) {
                     :comp="component"
                     :is-deluxe="isDeluxe"
                     :num-of-items="Object.keys(component.items).length"
+                    :is-extra="j+1 > component.info[isDeluxe ? 'qty_free_deluxe' : 'qty_free']"
                   >
                     <dropdown-item
                       v-for="(item, i) in component.items"
                       :key="item.id"
-                      :image="item.image"
-                      :name="item.name"
-                      :price="j+1 > component.info[isDeluxe ? 'qty_free_deluxe' : 'qty_free'] ? item.price : null"
+                      :item="item"
+                      :is-extra="j+1 > component.info[isDeluxe ? 'qty_free_deluxe' : 'qty_free']"
                       :in-package="packageName"
                       :in-section="sectionTitle"
                       :in-component="componentName"
-                      :item-id="item.id"
                       :index="j"
                     >
                     </dropdown-item>
@@ -150,14 +149,15 @@ function vue_output_menu_packages($product, $sections) {
           <input name="wooco_ids" type="hidden" :value="wooco_ids">
           <input name="is_deluxe" type="hidden" :value="isDeluxe">
           <input name="wooco_total" type="hidden" :value="packagePrice">
-          <input name="wooco_extra" type="hidden" :value="extraPrice">
+          <input name="wooco_extra" type="hidden" :value="extraPrice.sum">
+          <input name="wooco_extra_items" type="hidden" :value="extraPrice.extraItems">
           <input name="quantity" type="hidden" value="1">
           <i class="icon flaticon-users"></i>
           <input name="wooco_people" type="number" min="2" v-model="quantity" class="form-control">
           <i class="icon flaticon-calendar"></i>
           <input name="wooco_date" type="text" class="form-control datepicker" ref="dateInput">
           <div class="spacer"></div>
-          <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice}}</b></span>
+          <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice.sum}}</b></span>
           <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>
         </form>
       </div>

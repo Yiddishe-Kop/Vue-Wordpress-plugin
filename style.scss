@@ -250,6 +250,14 @@
       }
     }
 
+    input.qty {
+      height: 34px;
+      flex: 0 1 45px;
+      margin-right: 6px;
+      padding: 2px 4px;
+      border-color: var(--grey4);
+    }
+
     .dropdown-options {
       transform-origin: top center;
       width: fit-content;
