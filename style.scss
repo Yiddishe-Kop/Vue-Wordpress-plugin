@@ -152,36 +152,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    span {
-      font-family: lato, sans-serif;
-      padding: 0 12px;
-    }
-    .price {
-      float: none;
-      font-weight: normal;
-      &.green {
-        color: var(--green);
-      }
-    }
-    input {
-      display: inline-block;
-      width: 50px;
-      height: 35px;
-      padding: 0 5px;
-      border: none;
-      font-size: 22px;
-      background-color: var(--grey2);
-    }
-    i.extra-price {
-      background-color: var(--grey1);
-      font-style: normal;
-    }
     .total {
       float: none;
-    }
-    button {
-      padding: 4px 16px;
-      margin-left: 14px;
     }
   }
 
@@ -313,9 +285,11 @@
           margin-right: 30px;
         }
         .info {
-          padding: 5px 0;
+          padding: 5px 10px;
           h5,
           p {
+            font-size: 16px;
+            font-weight: 400;
             margin: 0;
           }
         }

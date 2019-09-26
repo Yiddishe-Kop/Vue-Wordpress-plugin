@@ -173,42 +173,8 @@
           justify-content: center;
 }
 
-.vue-app h4.top-summary span {
-  font-family: lato, sans-serif;
-  padding: 0 12px;
-}
-
-.vue-app h4.top-summary .price {
-  float: none;
-  font-weight: normal;
-}
-
-.vue-app h4.top-summary .price.green {
-  color: var(--green);
-}
-
-.vue-app h4.top-summary input {
-  display: inline-block;
-  width: 50px;
-  height: 35px;
-  padding: 0 5px;
-  border: none;
-  font-size: 22px;
-  background-color: var(--grey2);
-}
-
-.vue-app h4.top-summary i.extra-price {
-  background-color: var(--grey1);
-  font-style: normal;
-}
-
 .vue-app h4.top-summary .total {
   float: none;
-}
-
-.vue-app h4.top-summary button {
-  padding: 4px 16px;
-  margin-left: 14px;
 }
 
 .vue-app .meal-section {
@@ -384,11 +350,13 @@
 }
 
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item .info {
-  padding: 5px 0;
+  padding: 5px 10px;
 }
 
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item .info h5,
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item .info p {
+  font-size: 16px;
+  font-weight: 400;
   margin: 0;
 }
 

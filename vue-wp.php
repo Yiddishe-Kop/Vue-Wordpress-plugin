@@ -98,15 +98,7 @@ function vue_output_menu_packages($product, $sections) {
         ></deluxe-switch>
 
         <h4 class="top-summary">
-          <!-- <b :class="{green: isDeluxe}" class="price">${{packagePrice}}</b>
-            <span> &times; </span>
-            <input name="quantity" type="number" min="2" v-model="quantity" class="form-control sb">
-            <span v-if="extraPrice"> + </span>
-            <i v-if="extraPrice" class="extra-price">${{extraPrice}}</i>
-            <span> = </span>
-          <b class="total b">${{(packagePrice * quantity) + extraPrice}}</b> -->
           <b class="total b">${{packagePrice}}</b>
-          <!-- <button-cta @click="triggerAddToCart" name="add-to-cart">Add to Cart</button-cta> -->
         </h4>
 
         <meal-section v-for="(section, sectionTitle) in packageData" :key="sectionTitle" :title="sectionTitle" :section="section">
@@ -128,11 +120,13 @@ function vue_output_menu_packages($product, $sections) {
                     :in-package="packageName"
                     :in-section="sectionTitle"
                     :in-component="componentName"
+                    :component="component"
                     :selection="component[selectedVarName][j]"
                     :index="j"
                     :add-btn="component.info.custom_qty == 'yes' && j == component[selectedVarName].length - 1"
                     :comp="component"
                     :is-deluxe="isDeluxe"
+                    :num-of-items="Object.keys(component.items).length"
                   >
                     <dropdown-item
                       v-for="(item, i) in component.items"

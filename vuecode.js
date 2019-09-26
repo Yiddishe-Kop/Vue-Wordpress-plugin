@@ -87,16 +87,16 @@ Vue.component('food-component', {
 })
 
 Vue.component('food-dropdown', {
-  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'selection', 'addBtn', 'index', 'comp', 'isDeluxe'],
+  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'component', 'selection', 'addBtn', 'index', 'comp', 'isDeluxe', 'numOfItems'],
   template: `<div class="dropdown-wrapper">
                 <div @click="isOpen = !isOpen" :class="{noSelection: !selection}" class="dropdown" ref="dropdownMenu">
                   {{label}}
-                  <span class="arrow-down-icon">
+                  <span v-if="canOpenDropdown" class="arrow-down-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" viewBox="0 0 24 24" class="icon-cheveron-selection"><path class="secondary" fill-rule="evenodd" d="M8.7 9.7a1 1 0 1 1-1.4-1.4l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.4L12 6.42l-3.3 3.3zm6.6 4.6a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z"/></svg>
                   </span>
                 </div>
                 <transition name="slide-in">
-                  <div v-if="isOpen" class="dropdown-options">
+                  <div v-if="isOpen && canOpenDropdown" class="dropdown-options">
                     <slot/>
                   </div>
                 </transition>
@@ -110,6 +110,7 @@ Vue.component('food-dropdown', {
   data() {
     return {
       isOpen: false,
+      canOpenDropdown: true,
     }
   },
   computed: {
@@ -146,6 +147,21 @@ Vue.component('food-dropdown', {
   },
   created() {
     document.addEventListener('click', this.documentClick)
+  },
+  mounted() {
+    if (this.numOfItems == 1) {
+      this.canOpenDropdown = false
+      let items = this.component.items
+      let item = items[Object.keys(items)[0]]
+      vEvent.$emit(`${this.inPackage}foodoptionselect`, {
+        package: this.inPackage,
+        section: this.inSection,
+        component: this.inComponent,
+        itemName: item.name,
+        itemId: item.id,
+        index: 0,
+      })
+    }
   },
   beforeDestroy() {
     document.removeEventListener('click', this.documentClick)
