@@ -77,7 +77,7 @@
 
 .vue-app button.only-icon {
   margin: 0 1px;
-  background-color: transparent;
+  background-color: transparent !important;
   padding: 0;
 }
 
@@ -319,10 +319,10 @@
   top: 35px;
   z-index: 100;
   background-color: var(--grey3);
-  padding: 2px 5px;
+  padding: 0 4px;
   border-radius: 12px;
-  -webkit-box-shadow: var(--shaddow);
-          box-shadow: var(--shaddow);
+  -webkit-box-shadow: var(--shaddow-hover);
+          box-shadow: var(--shaddow-hover);
 }
 
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item {
@@ -356,7 +356,7 @@
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item img {
   width: 60px;
   float: left;
-  margin-right: 30px;
+  margin-right: 6px;
 }
 
 .vue-app .dropdown-wrapper .dropdown-options .dropdown-item .info {
@@ -371,6 +371,7 @@
 }
 
 .vue-app .pill {
+  font-size: 12px;
   font-weight: 600;
   padding: 3px 8px;
   border-radius: 4px;

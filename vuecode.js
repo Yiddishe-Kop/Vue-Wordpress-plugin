@@ -2,7 +2,7 @@ Vue.productionTip = false;
 window.vEvent = new Vue();
 
 Vue.component('button-cta', {
-  template: `<button @click="$emit('click')"><slot/></button>`
+  template: `<button @click="$emit('click')" class="cta"><slot/></button>`
 })
 
 Vue.component('pill', {
@@ -89,7 +89,7 @@ Vue.component('food-component', {
 Vue.component('food-dropdown', {
   props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'component', 'selection', 'addBtn', 'index', 'comp', 'isDeluxe', 'numOfItems', 'isExtra'],
   template: `<div class="dropdown-wrapper">
-                <div @click="isOpen = !isOpen" :class="{noSelection: !selection}" class="dropdown" ref="dropdownMenu">
+                <div @click="isOpen = !isOpen" :class="{noSelection: !selection.id}" class="dropdown" ref="dropdownMenu">
                   {{label}}
                   <span v-if="canOpenDropdown" class="arrow-down-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" viewBox="0 0 24 24" class="icon-cheveron-selection"><path class="secondary" fill-rule="evenodd" d="M8.7 9.7a1 1 0 1 1-1.4-1.4l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.4L12 6.42l-3.3 3.3zm6.6 4.6a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z"/></svg>
@@ -172,7 +172,7 @@ Vue.component('food-dropdown', {
         component: this.inComponent,
         itemName: item.name,
         itemId: item.id,
-        index: 0,
+        index: this.index,
       })
     }
   },
@@ -287,8 +287,41 @@ var shabbosPackageMixin = {
         }
       }
     },
-    triggerAddToCart() {
-      this.$refs.addToCartBtn.$el.click();
+    addToCart() { // attempt at ajax add-to-cart
+      let data = {
+        action: 'add_to_cart',
+        product_id: this.packageId,
+        variation_id: '',
+        wooco_ids: this.wooco_ids,
+        is_deluxe: this.isDeluxe,
+        wooco_total: this.packagePrice,
+        wooco_extra: this.extraPrice.sum,
+        wooco_extra_items: this.extraPrice.extraItems,
+        quantity: 1,
+        wooco_people: this.quantity,
+        wooco_date: this.$refs.dateInput.value,
+      };
+      jQuery.ajax({
+        type: 'post',
+        url: wc_add_to_cart_params.ajax_url,
+        data: data,
+        beforeSend: function (response) {
+          console.log(data, wc_add_to_cart_params.ajax_url);
+        },
+        success: function (response) {
+          if (response.error) {
+            console.warn({ response });
+          } else {
+            console.log({ response });
+            jQuery('#mini-cart').html(response.fragments['div.widget_shopping_cart_content']);
+          }
+        },
+      });
+      // fetch(wc_add_to_cart_params.ajax_url, {
+      //   method: 'post',
+      //   body: data,
+      // })
+      //   .then(res => console.log(res))
     }
   },
   mounted() {
@@ -308,7 +341,7 @@ var shabbosPackageMixin = {
     this.packageData = package_data.sections_items
 
     this.quantity = package_data.people || 2
-    if (package_data.date) this.$refs.dateInput.value = package_data.date
+    if (package_data.date) this.datepicker.date = package_data.date
 
     console.log(this.$data);
 
@@ -327,7 +360,7 @@ var shabbosPackageMixin = {
     })
     // onAddLine
     vEvent.$on(`${this.packageName}addline`, data => {
-      this.packageData[data.section][data.component][this.selectedVarName].push({id: '', qty: 1});
+      this.packageData[data.section][data.component][this.selectedVarName].push({ id: '', qty: 1 });
     })
     // onRemoveLine
     vEvent.$on(`${this.packageName}removeline`, data => {
