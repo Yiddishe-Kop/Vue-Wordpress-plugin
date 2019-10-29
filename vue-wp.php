@@ -11,13 +11,13 @@
 
 //Register scripts to use
 function func_load_vuescripts() {
-  if (is_archive()) {
-    wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
-    wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
-    wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
-    wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
-    wp_enqueue_style('vue_css', plugin_dir_url(__FILE__) . 'style.css', 'main_style');
-  }
+    if (is_archive()) {
+        wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
+        wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
+        wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
+        wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
+        wp_enqueue_style('vue_css', plugin_dir_url(__FILE__) . 'style.css', 'main_style');
+    }
 }
 add_action('wp_enqueue_scripts', 'func_load_vuescripts');
 
@@ -40,7 +40,7 @@ function vue_output_menu_packages($product, $sections) {
             $wooco_products = wooco_get_products($wooco_component['type'], $wooco_component[$wooco_component_type], $wooco_component_default);
             foreach ($wooco_products as $wooco_product) {
                 $package_sections_items[$section_name][$wooco_component['name']]['items'][$wooco_product['id']] = $wooco_product;
-                $package_sections_items[$section_name][$wooco_component['name']]['items'][$wooco_product['id']]['price_html'] = ''; // delete it - was cusing problem for JSON.parse
+                $package_sections_items[$section_name][$wooco_component['name']]['items'][$wooco_product['id']]['price_html'] = ''; // delete it - was causing problem for JSON.parse
             }
         }
     }
@@ -157,20 +157,22 @@ function vue_output_menu_packages($product, $sections) {
           <input name="wooco_people" type="number" min="2" v-model="quantity" class="form-control">
           <i class="icon flaticon-calendar"></i>
           <vuejs-datepicker
-            v-model="datepicker.date"
-            :disabled-dates="disabledDates"
-            :highlighted="datepicker.highlighted"
-            class="vue-datepicker"
-            input-class="datepicker"
-            :bootstrap-styling="true"
-            format="MM/dd/yyyy"
-            name="wooco_date"
+          v-model="datepicker.date"
+          :disabled-dates="disabledDates"
+          :highlighted="datepicker.highlighted"
+          class="vue-datepicker"
+          input-class="datepicker"
+          :bootstrap-styling="true"
+          format="MM/dd/yyyy"
+          name="wooco_date"
           ></vuejs-datepicker>
           <div class="spacer"></div>
-          <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice.sum}}</b></span>
-          <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>
+          <div style="align-self:flex-end;">
+            <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice.sum}}</b></span>
+            <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>
+          </div>
         </form>
-      </div>
+  </div>
 
       <script>
         let app<?php echo $product_id ?> = new Vue({

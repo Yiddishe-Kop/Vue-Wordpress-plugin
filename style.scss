@@ -329,13 +329,18 @@
     margin: 30px 0 0;
     padding: 8px;
     background-color: var(--grey4);
-    // border-top: 2px solid var(--grey2);
-    // border-bottom: 2px solid var(--grey2);
     border-radius: 0 0 8px 8px;
     font-size: 22px;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row !important;
     align-items: center;
+    justify-content: space-around;
+    & > div {
+      display: flex;
+      align-items: center;
+      margin: 5px 0;
+    }
     i.icon {
       margin: 0 4px 0 8px;
     }
