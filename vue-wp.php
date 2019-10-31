@@ -12,11 +12,11 @@
 //Register scripts to use
 function func_load_vuescripts() {
     // if (is_archive()) {
-        wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
-        wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
-        wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
-        wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
-        wp_enqueue_style('vue_css', plugin_dir_url(__FILE__) . 'style.css', 'main_style');
+    wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
+    wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
+    wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
+    wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
+    wp_enqueue_style('vue_css', plugin_dir_url(__FILE__) . 'style.css', 'main_style');
     // }
 }
 add_action('wp_enqueue_scripts', 'func_load_vuescripts');
@@ -44,6 +44,8 @@ function vue_output_menu_packages($product, $sections) {
             }
         }
     }
+    // var_dump($components);
+    // var_dump($package_sections_items);
 
     $package_data = [
         'category' => get_the_category_by_ID($product->get_category_ids()[0]),
@@ -113,7 +115,7 @@ function vue_output_menu_packages($product, $sections) {
             :in-package="packageName"
             :in-section="sectionTitle"
             :is-deluxe="isDeluxe"
-            v-if="component.info.deluxe_only != 'yes' || isDeluxe"
+            v-if="shouldShowComp(component.info.show_in)"
           >
             <transition-group name="slide-in">
               <div v-for="(sel, j) in component[selectedVarName]" :key="componentName + j" class="food-line">

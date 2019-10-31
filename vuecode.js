@@ -319,6 +319,16 @@ var shabbosPackageMixin = {
           }
         },
       });
+    },
+    shouldShowComp(showIn) {
+      switch (showIn) {
+        case 'both':
+          return true;
+        case 'deluxe':
+          return this.isDeluxe;
+        case 'basic':
+          return !this.isDeluxe;
+      }
     }
   },
   mounted() {
