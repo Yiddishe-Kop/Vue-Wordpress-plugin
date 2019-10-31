@@ -87,7 +87,7 @@ Vue.component('food-component', {
 })
 
 Vue.component('food-dropdown', {
-  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'component', 'selection', 'addBtn', 'index', 'comp', 'isDeluxe', 'numOfItems', 'isExtra'],
+  props: ['emptyText', 'inPackage', 'inSection', 'inComponent', 'component', 'selection', 'addBtn', 'index', 'isDeluxe', 'numOfItems', 'isExtra'],
   template: `<div class="dropdown-wrapper">
                 <div @click="isOpen = !isOpen" :class="{noSelection: !selection.id}" class="dropdown" ref="dropdownMenu">
                   {{label}}
@@ -104,7 +104,7 @@ Vue.component('food-dropdown', {
                 <button-cta v-if="addBtn" @click="addLine" class="only-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-add-circle"><circle cx="12" cy="12" r="10" class="primary"/><path class="secondary" d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"/></svg>
                 </button-cta>
-                <button-cta v-if="addBtn && comp[isDeluxe? 'selected_deluxe' : 'selected_basic'].length > 1" @click="removeLine" class="only-icon">
+                <button-cta v-if="addBtn && component[isDeluxe? 'selected_deluxe' : 'selected_basic'].length > 1" @click="removeLine" class="only-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-remove-circle"><circle cx="12" cy="12" r="10" class="primary"/><rect width="12" height="2" x="6" y="11" class="secondary" rx="1"/></svg>
                 </button-cta>
               </div>`,
@@ -129,7 +129,7 @@ Vue.component('food-dropdown', {
   computed: {
     label() {
       if (this.selection.id) {
-        return this.comp.items[this.selection.id].name
+        return this.component.items[this.selection.id].name
       } else {
         return this.emptyText
       }
@@ -173,6 +173,7 @@ Vue.component('food-dropdown', {
         itemName: item.name,
         itemId: item.id,
         index: this.index,
+        bothTiers: true
       })
     }
   },
@@ -208,6 +209,7 @@ Vue.component('dropdown-item', {
 var shabbosPackageMixin = {
   data() {
     return {
+      category: undefined,
       packageName: null,
       packageId: null,
       stock: {
@@ -317,15 +319,11 @@ var shabbosPackageMixin = {
           }
         },
       });
-      // fetch(wc_add_to_cart_params.ajax_url, {
-      //   method: 'post',
-      //   body: data,
-      // })
-      //   .then(res => console.log(res))
     }
   },
   mounted() {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
+    this.category = package_data.category
     this.packageName = package_data.package_name
     this.packageId = package_data.package_id
     this.stock = {
@@ -348,9 +346,17 @@ var shabbosPackageMixin = {
     // on DDselect
     vEvent.$on(`${this.packageName}foodoptionselect`, data => {
       // console.log('Selected: ', data)
-      this.$set(
-        this.packageData[data.section][data.component][this.selectedVarName][data.index], 'id', data.itemId
-      )
+      if (data.bothTiers) {
+        ['selected_deluxe', 'selected_basic'].forEach(tier => {
+          this.$set(
+            this.packageData[data.section][data.component][tier][data.index], 'id', data.itemId
+          )
+        })
+      } else {
+        this.$set(
+          this.packageData[data.section][data.component][this.selectedVarName][data.index], 'id', data.itemId
+        )
+      }
     })
     // on update_qty
     vEvent.$on(`${this.packageName}update_qty`, data => {

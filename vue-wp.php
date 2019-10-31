@@ -11,13 +11,13 @@
 
 //Register scripts to use
 function func_load_vuescripts() {
-    if (is_archive()) {
+    // if (is_archive()) {
         wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
         wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
         wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
         wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
         wp_enqueue_style('vue_css', plugin_dir_url(__FILE__) . 'style.css', 'main_style');
-    }
+    // }
 }
 add_action('wp_enqueue_scripts', 'func_load_vuescripts');
 
@@ -46,6 +46,7 @@ function vue_output_menu_packages($product, $sections) {
     }
 
     $package_data = [
+        'category' => get_the_category_by_ID($product->get_category_ids()[0]),
         'package_name' => $product->get_name(),
         'package_id' => $product_id,
         'discount' => esc_attr(get_post_meta($product_id, 'wooco_discount_percent', true)),
@@ -125,7 +126,6 @@ function vue_output_menu_packages($product, $sections) {
                     :selection="component[selectedVarName][j]"
                     :index="j"
                     :add-btn="component.info.custom_qty == 'yes' && j == component[selectedVarName].length - 1"
-                    :comp="component"
                     :is-deluxe="isDeluxe"
                     :num-of-items="Object.keys(component.items).length"
                     :is-extra="j+1 > component.info[isDeluxe ? 'qty_free_deluxe' : 'qty_free']"
