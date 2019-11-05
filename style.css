@@ -55,6 +55,10 @@
 }
 
 .vue-app .package-wrapper .package-info .package-title {
+  margin: 0 auto 10px;
+}
+
+.vue-app .package-wrapper .package-info .package-title.move-up {
   margin: -25px auto 10px;
 }
 

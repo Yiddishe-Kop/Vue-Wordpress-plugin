@@ -70,6 +70,7 @@ function vue_output_menu_packages($product, $sections) {
 
     // echo '<pre>' . print_r($package_sections_items, true) . '</pre>';
 
+    $has_image = true;
     ?>
   <div class="vue-app ui-font" id="vue-app-<?php echo $product_id ?>">
     <pre id="wpData" ref="packageData"><?php echo wp_json_encode($package_data) ?></pre>
@@ -79,6 +80,7 @@ function vue_output_menu_packages($product, $sections) {
     if ($image_id) {
         $html = wp_get_attachment_image($image_id, 'large', false, ['class' => 'package-image']);
     } else {
+        $has_image = false;
         $html = '';
     }
     echo apply_filters('woocommerce_single_product_image_thumbnail_html', $html, $image_id);?>
@@ -89,7 +91,7 @@ function vue_output_menu_packages($product, $sections) {
       </pill>
 
       <div class="package-info">
-        <h1 class="package-title serif thin smcp"><span><?php echo $product->get_name() ?></span></h1>
+        <h1 class="package-title serif thin smcp<?php echo $has_image ? ' move-up' : '' ?>"><span><?php echo $product->get_name() ?></span></h1>
         <p><?php echo $product->get_description() ?></p>
       </div>
 

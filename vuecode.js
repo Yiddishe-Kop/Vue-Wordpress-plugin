@@ -355,12 +355,14 @@ var shabbosPackageMixin = {
 
     // on DDselect
     vEvent.$on(`${this.packageName}foodoptionselect`, data => {
-      // console.log('Selected: ', data)
+      console.log('Selected: ', data)
       if (data.bothTiers) {
         ['selected_deluxe', 'selected_basic'].forEach(tier => {
-          this.$set(
-            this.packageData[data.section][data.component][tier][data.index], 'id', data.itemId
-          )
+          if (this.packageData[data.section][data.component][tier][data.index]) {
+            this.$set(
+              this.packageData[data.section][data.component][tier][data.index], 'id', data.itemId
+            )
+          }
         })
       } else {
         this.$set(

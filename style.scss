@@ -44,7 +44,10 @@
     .package-info {
       text-align: center;
       .package-title {
-        margin: -25px auto 10px;
+        margin: 0 auto 10px;
+        &.move-up {
+          margin: -25px auto 10px;
+        }
         span {
           display: inline-block;
           padding: 0px 20px 11px;
