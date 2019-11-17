@@ -12,7 +12,7 @@
 //Register scripts to use
 function func_load_vuescripts() {
     // if (is_archive()) {
-    wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
+    wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js', array(), null, false);
     wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
     wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
     wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
@@ -44,11 +44,13 @@ function vue_output_menu_packages($product, $sections) {
             }
         }
     }
-    // var_dump($components);
-    // var_dump($package_sections_items);
+
+    $category = get_the_category_by_ID($product->get_category_ids()[0]);
+    $vendor = getProductVendor($product);
+    $min_people = $category == 'Shabbos' ? $vendor->min_people_shabbos : $vendor->min_people_supper;
 
     $package_data = [
-        'category' => get_the_category_by_ID($product->get_category_ids()[0]),
+        'category' => $category,
         'package_name' => $product->get_name(),
         'package_id' => $product_id,
         'discount' => esc_attr(get_post_meta($product_id, 'wooco_discount_percent', true)),
@@ -63,6 +65,7 @@ function vue_output_menu_packages($product, $sections) {
         'is_in_stock' => $product->is_in_stock(),
         'stock_qty' => $product->get_stock_quantity(),
         'backorders_allowed' => $product->backorders_allowed(),
+        'min_people' => $min_people,
 
         'date' => isset($_GET['date']) ? $_GET['date'] : '',
         'people' => isset($_GET['people']) ? $_GET['people'] : '',
@@ -158,7 +161,7 @@ function vue_output_menu_packages($product, $sections) {
           <input name="wooco_extra_items" type="hidden" :value="extraPrice.extraItems">
           <input name="quantity" type="hidden" value="1">
           <i class="icon flaticon-users"></i>
-          <input name="wooco_people" type="number" min="2" v-model="quantity" class="form-control">
+          <input name="wooco_people" type="number" :min="minPeople" v-model="quantity" class="form-control">
           <i class="icon flaticon-calendar"></i>
           <vuejs-datepicker
           v-model="datepicker.date"

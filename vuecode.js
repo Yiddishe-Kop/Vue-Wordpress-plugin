@@ -223,6 +223,7 @@ var shabbosPackageMixin = {
       },
       packageData: {},
       selectedPackage: 'Basic',
+      minPeople: 2,
       quantity: 2,
       addToCartUrl: '',
     }
@@ -348,10 +349,11 @@ var shabbosPackageMixin = {
     this.addToCartUrl = package_data.addToCartUrl
     this.packageData = package_data.sections_items
 
-    this.quantity = package_data.people || 2
+    this.minPeople = package_data.min_people
+    this.quantity = package_data.people >= this.minPeople ? package_data.people : this.minPeople
     if (package_data.date) this.datepicker.date = package_data.date
 
-    console.log(this.$data);
+    // console.log(this.$data);
 
     // on DDselect
     vEvent.$on(`${this.packageName}foodoptionselect`, data => {
