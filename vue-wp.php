@@ -12,7 +12,7 @@
 //Register scripts to use
 function func_load_vuescripts() {
     // if (is_archive()) {
-    wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js', array(), null, false);
+    wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
     wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
     wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
     wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
@@ -122,6 +122,11 @@ function vue_output_menu_packages($product, $sections) {
             :is-deluxe="isDeluxe"
             v-if="shouldShowComp(component.info.show_in)"
           >
+          <div v-if="component.info.custom_qty == 'yes' && component[selectedVarName].length === 0">
+            <button-cta @click="vEvent.$emit(`${packageName}addline`, {package: packageName, section: sectionTitle, component: componentName})" class="only-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22px" viewBox="0 0 24 24" class="icon-add-circle"><circle cx="12" cy="12" r="10" class="primary"/><path class="secondary" d="M13 11h4a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4z"/></svg>
+            </button-cta>
+          </div>
             <transition-group name="slide-in">
               <div v-for="(sel, j) in component[selectedVarName]" :key="componentName + j" class="food-line">
                   <food-dropdown
@@ -188,6 +193,11 @@ function vue_output_menu_packages($product, $sections) {
           components: {
             vuejsDatepicker
           },
+          data() {
+            return {
+              vEvent: window.vEvent
+            }
+          }
         })
       </script>
     </section>
