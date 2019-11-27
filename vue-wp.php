@@ -158,7 +158,8 @@ function vue_output_menu_packages($product, $sections) {
             </transition-group>
           </food-component>
         </meal-section>
-        <form :action="addToCartUrl" method="post" enctype="multipart/form-data" class="summary">
+        <form @submit="handleSubmit" :action="addToCartUrl" name="add-to-cart" method="post" enctype="multipart/form-data" class="summary">
+          <input name="add-to-cart" type="hidden" :value="packageId">
           <input name="wooco_ids" type="hidden" :value="wooco_ids">
           <input name="is_deluxe" type="hidden" :value="isDeluxe">
           <input name="wooco_total" type="hidden" :value="packagePrice">
@@ -166,7 +167,7 @@ function vue_output_menu_packages($product, $sections) {
           <input name="wooco_extra_items" type="hidden" :value="extraPrice.extraItems">
           <input name="quantity" type="hidden" value="1">
           <i class="icon flaticon-users"></i>
-          <input name="wooco_people" type="number" :min="minPeople" v-model="quantity" class="form-control">
+          <input name="wooco_people" type="number" :min="minPeople" v-model="quantity" class="form-control" required >
           <i class="icon flaticon-calendar"></i>
           <vuejs-datepicker
           v-model="datepicker.date"
@@ -177,11 +178,12 @@ function vue_output_menu_packages($product, $sections) {
           :bootstrap-styling="true"
           format="MM/dd/yyyy"
           name="wooco_date"
+          :required="true"
           ></vuejs-datepicker>
           <div class="spacer"></div>
           <div style="align-self:flex-end;">
             <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice.sum}}</b></span>
-            <button-cta type="submit" name="add-to-cart" :value="packageId" ref="addToCartBtn">Add to Cart</button-cta>
+            <button-cta type="submit" >Add to Cart</button-cta>
           </div>
         </form>
   </div>

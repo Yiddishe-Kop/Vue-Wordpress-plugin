@@ -290,6 +290,16 @@ var shabbosPackageMixin = {
         }
       }
     },
+    handleSubmit(e) {
+      e.preventDefault()
+      if (!this.datepicker.date) {
+        alert("Please select your date before continuing.")
+      } else if (!this.quantity) {
+        alert("Please enter amount of people.")
+      } else {
+        e.target.submit();
+      }
+    },
     addToCart() { // attempt at ajax add-to-cart
       let data = {
         action: 'add_to_cart',
