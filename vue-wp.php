@@ -49,6 +49,8 @@ function vue_output_menu_packages($product, $sections) {
     $vendor = getProductVendor($product);
     $min_people = $category == 'Shabbos' ? $vendor->min_people_shabbos : $vendor->min_people_supper;
 
+    global $WCMp;
+
     $package_data = [
         'category' => $category,
         'package_name' => $product->get_name(),
@@ -57,8 +59,8 @@ function vue_output_menu_packages($product, $sections) {
         'qty_min' => esc_attr(get_post_meta($product_id, 'wooco_qty_min', true)),
         'qty_max' => esc_attr(get_post_meta($product_id, 'wooco_qty_max', true)),
         'price' => $product->get_price(),
+        'percentage_hike' => $WCMp->vendor_caps->payment_cap['percentage_hike'],
         'deluxe_price' => get_post_meta($product_id, '_deluxe_price', true),
-        'pricing' => $product->get_pricing(),
         'addToCartUrl' => $product->add_to_cart_url(),
         'sections_items' => $package_sections_items,
         'manage_stock' => 1 == $product->get_manage_stock(),
@@ -90,7 +92,7 @@ function vue_output_menu_packages($product, $sections) {
 
       <pill v-if="stock.manage && stock.qty < 5" class="red stock-alert">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="1.2em" class="icon"><path class="primary" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20z"/><path class="secondary" d="M12 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm1-5.9c-.13 1.2-1.88 1.2-2 0l-.5-5a1 1 0 0 1 1-1.1h1a1 1 0 0 1 1 1.1l-.5 5z"/></svg>
-        Hurry! only {{stock.qty}} available
+        {{stock.inStock ? 'Hurry! only ' + stock.qty + ' available' : 'Sorry, out of stock'}}
       </pill>
 
       <div class="package-info">
@@ -181,7 +183,7 @@ function vue_output_menu_packages($product, $sections) {
           :required="true"
           ></vuejs-datepicker>
           <div class="spacer"></div>
-          <div style="align-self:flex-end;">
+          <div v-if="stock.inStock" style="align-self:flex-end;">
             <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice.sum}}</b></span>
             <button-cta type="submit" >Add to Cart</button-cta>
           </div>

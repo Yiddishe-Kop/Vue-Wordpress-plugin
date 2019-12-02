@@ -344,6 +344,7 @@ var shabbosPackageMixin = {
   },
   mounted() {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
+
     this.category = package_data.category
     this.packageName = package_data.package_name
     this.packageId = package_data.package_id
@@ -353,8 +354,8 @@ var shabbosPackageMixin = {
       qty: package_data.stock_qty,
     }
     this.basePrice = {
-      basic: Number(package_data.price),
-      deluxe: Number(package_data.deluxe_price),
+      basic: Math.round(Number(package_data.price) * package_data.percentage_hike),
+      deluxe: Math.round(Number(package_data.deluxe_price) * package_data.percentage_hike),
     }
     this.addToCartUrl = package_data.addToCartUrl
     this.packageData = package_data.sections_items

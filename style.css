@@ -89,8 +89,9 @@
   background-color: var(--brand);
 }
 
-.vue-app button:disabled {
+.vue-app button:disabled, .vue-app button.disabled, .vue-app button:disabled:hover, .vue-app button.disabled:hover {
   background-color: var(--grey2);
+  color: var(--grey4) !important;
 }
 
 .vue-app .circle {

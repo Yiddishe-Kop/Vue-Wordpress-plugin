@@ -73,8 +73,12 @@
     &.cta {
       background-color: var(--brand);
     }
-    &:disabled {
+    &:disabled,
+    &.disabled,
+    &:disabled:hover,
+    &.disabled:hover {
       background-color: var(--grey2);
+      color: var(--grey4) !important;
     }
   }
   .circle {
