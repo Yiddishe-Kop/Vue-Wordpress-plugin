@@ -49,8 +49,6 @@ function vue_output_menu_packages($product, $sections) {
     $vendor = getProductVendor($product);
     $min_people = $category == 'Shabbos' ? $vendor->min_people_shabbos : $vendor->min_people_supper;
 
-    global $WCMp;
-
     $package_data = [
         'category' => $category,
         'package_name' => $product->get_name(),
@@ -59,7 +57,7 @@ function vue_output_menu_packages($product, $sections) {
         'qty_min' => esc_attr(get_post_meta($product_id, 'wooco_qty_min', true)),
         'qty_max' => esc_attr(get_post_meta($product_id, 'wooco_qty_max', true)),
         'price' => $product->get_price(),
-        'percentage_hike' => $WCMp->vendor_caps->payment_cap['percentage_hike'],
+        'percentage_hike' => get_percentage_hike(),
         'deluxe_price' => get_post_meta($product_id, '_deluxe_price', true),
         'addToCartUrl' => $product->add_to_cart_url(),
         'sections_items' => $package_sections_items,

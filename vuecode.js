@@ -75,7 +75,7 @@ Vue.component('food-component', {
         let addedCost = 0;
         extras.forEach(id => {
           if (this.componentData.items[id.id]) { // not null
-            addedCost += Number(this.componentData.items[id.id].price) * Number(id.qty)
+            addedCost += Math.round(Number(this.componentData.items[id.id].price)) * Number(id.qty)
           }
         })
         return addedCost
@@ -189,7 +189,7 @@ Vue.component('dropdown-item', {
                 <img v-if="item.image" :src="item.image">
                 <div class="info">
                   <h5>{{item.name}}</h5>
-                  <p v-if="isExtra">\${{item.price}}</p>
+                  <p v-if="isExtra">\${{Math.round(Number(item.price))}}</p>
                 </div>
              </div>`,
   methods: {
@@ -243,7 +243,7 @@ var shabbosPackageMixin = {
           let extras = this.packageData[section][comp][this.selectedVarName].slice(qtyFree)
           extras.forEach(id => {
             if (this.packageData[section][comp].items[id.id]) {
-              sum += Number(this.packageData[section][comp].items[id.id].price) * Number(id.qty)
+              sum += Math.round(Number(this.packageData[section][comp].items[id.id].price)) * Number(id.qty)
               extraItems.push(id.id + '/' + id.qty) // ID/QTY
             }
           })
@@ -354,7 +354,7 @@ var shabbosPackageMixin = {
       qty: package_data.stock_qty,
     }
     this.basePrice = {
-      basic: Math.round(Number(package_data.price) * package_data.percentage_hike),
+      basic: Number(package_data.price),
       deluxe: Math.round(Number(package_data.deluxe_price) * package_data.percentage_hike),
     }
     this.addToCartUrl = package_data.addToCartUrl
