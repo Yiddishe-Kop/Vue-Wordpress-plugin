@@ -23,9 +23,12 @@ add_action('wp_enqueue_scripts', 'func_load_vuescripts');
 
 function vue_output_menu_packages($product, $sections) {
 
+    $percentage_hike = get_percentage_hike();
+
     $product_id = $product->get_id();
     $components = $product->get_components();
     $package_sections_items = [];
+
     foreach ($sections as $key => $section_name) {
         $package_sections_items[$section_name] = [];
         foreach ($components as $wooco_component) {
@@ -40,6 +43,9 @@ function vue_output_menu_packages($product, $sections) {
             $wooco_products = wooco_get_products($wooco_component['type'], $wooco_component[$wooco_component_type], $wooco_component_default);
             foreach ($wooco_products as $wooco_product) {
                 $package_sections_items[$section_name][$wooco_component['name']]['items'][$wooco_product['id']] = $wooco_product;
+                // add percentage hike for extra items [they only get auto added in get_price_html]
+                $original_price = $package_sections_items[$section_name][$wooco_component['name']]['items'][$wooco_product['id']]['price'];
+                $package_sections_items[$section_name][$wooco_component['name']]['items'][$wooco_product['id']]['price'] = round($original_price * $percentage_hike);
                 $package_sections_items[$section_name][$wooco_component['name']]['items'][$wooco_product['id']]['price_html'] = ''; // delete it - was causing problem for JSON.parse
             }
         }
@@ -57,7 +63,7 @@ function vue_output_menu_packages($product, $sections) {
         'qty_min' => esc_attr(get_post_meta($product_id, 'wooco_qty_min', true)),
         'qty_max' => esc_attr(get_post_meta($product_id, 'wooco_qty_max', true)),
         'price' => $product->get_price(),
-        'percentage_hike' => get_percentage_hike(),
+        'percentage_hike' => $percentage_hike,
         'deluxe_price' => get_post_meta($product_id, '_deluxe_price', true),
         'addToCartUrl' => $product->add_to_cart_url(),
         'sections_items' => $package_sections_items,

@@ -354,7 +354,7 @@ var shabbosPackageMixin = {
       qty: package_data.stock_qty,
     }
     this.basePrice = {
-      basic: Number(package_data.price),
+      basic: Math.round(Number(package_data.price) * package_data.percentage_hike),
       deluxe: Math.round(Number(package_data.deluxe_price) * package_data.percentage_hike),
     }
     this.addToCartUrl = package_data.addToCartUrl
