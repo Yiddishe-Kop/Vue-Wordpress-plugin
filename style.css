@@ -1,5 +1,6 @@
 .vue-app {
   margin: 0 auto;
+  width: 100%;
 }
 
 .vue-app #wpData {
@@ -7,6 +8,7 @@
 }
 
 .vue-app .package-wrapper {
+  width: 100%;
   margin: 0 auto 60px;
   background-color: var(--grey2);
   border-radius: 8px;
@@ -100,6 +102,36 @@
   background-color: var(--grey3);
   border-radius: 50%;
   margin-left: 6px;
+}
+
+.vue-app .image-gallery {
+  padding: 56px 10px 72px;
+  overflow-x: auto;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.vue-app .image-gallery img {
+  border-radius: 8px;
+  height: 100px;
+  -webkit-margin-end: 8px;
+          margin-inline-end: 8px;
+  cursor: -webkit-zoom-in;
+  cursor: zoom-in;
+  -webkit-transition: all 0.25s ease-in;
+  transition: all 0.25s ease-in;
+  position: relative;
+}
+
+.vue-app .image-gallery img:hover {
+  -webkit-transform: scale(2);
+          transform: scale(2);
+  z-index: 999;
+}
+
+.vue-app .image-gallery img:first-child {
+  -webkit-transform-origin: left;
+          transform-origin: left;
 }
 
 .vue-app .pricing-switcher {

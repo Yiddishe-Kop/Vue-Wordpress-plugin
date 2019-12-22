@@ -1,11 +1,13 @@
 .vue-app {
   margin: 0 auto;
+  width: 100%;
 
   #wpData {
     display: none;
   }
 
   .package-wrapper {
+    width: 100%;
     margin: 0 auto 60px;
     // box-shadow: var(--shaddow);
     background-color: var(--grey2);
@@ -87,6 +89,28 @@
     background-color: var(--grey3);
     border-radius: 50%;
     margin-left: 6px;
+  }
+
+  .image-gallery {
+    padding: 56px 10px 72px;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    img {
+      border-radius: 8px;
+      height: 100px;
+      margin-inline-end: 8px;
+      cursor: zoom-in;
+      transition: all 0.25s ease-in;
+      position: relative;
+      &:hover {
+        transform: scale(2);
+        z-index: 999;
+      }
+      &:first-child {
+        transform-origin: left;
+      }
+    }
   }
 
   // pricing-switcher =======================================

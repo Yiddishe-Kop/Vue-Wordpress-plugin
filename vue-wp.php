@@ -11,13 +11,13 @@
 
 //Register scripts to use
 function func_load_vuescripts() {
-    // if (is_archive()) {
-    wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
-    wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
-    wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
-    wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
-    wp_enqueue_style('vue_css', plugin_dir_url(__FILE__) . 'style.css', 'main_style');
-    // }
+    if (strpos($_SERVER['REQUEST_URI'], 'vendor') !== false) { // only load vue files if in "vendor" page [checks if 'vendor' in url]
+        wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
+        wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
+        wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
+        wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
+        wp_enqueue_style('vue_css', plugin_dir_url(__FILE__) . 'style.css', 'main_style');
+    }
 }
 add_action('wp_enqueue_scripts', 'func_load_vuescripts');
 
@@ -55,6 +55,13 @@ function vue_output_menu_packages($product, $sections) {
     $vendor = getProductVendor($product);
     $min_people = $category == 'Shabbos' ? $vendor->min_people_shabbos : $vendor->min_people_supper;
 
+    $image_gallery = [];
+    if ($attachment_ids = $product->get_gallery_image_ids()) {
+        foreach ($attachment_ids as $attachment_id) {
+            $image_gallery[] = wp_get_attachment_thumb_url($attachment_id);
+        }
+    }
+
     $package_data = [
         'category' => $category,
         'package_name' => $product->get_name(),
@@ -72,6 +79,7 @@ function vue_output_menu_packages($product, $sections) {
         'stock_qty' => $product->get_stock_quantity(),
         'backorders_allowed' => $product->backorders_allowed(),
         'min_people' => $min_people,
+        'image_gallery' => $image_gallery,
 
         'date' => isset($_GET['date']) ? $_GET['date'] : '',
         'people' => isset($_GET['people']) ? $_GET['people'] : '',
@@ -102,6 +110,10 @@ function vue_output_menu_packages($product, $sections) {
       <div class="package-info">
         <h1 class="package-title serif thin smcp<?php echo $has_image ? ' move-up' : '' ?>"><span><?php echo $product->get_name() ?></span></h1>
         <p><?php echo $product->get_description() ?></p>
+      </div>
+
+      <div v-if="imageGallery && imageGallery.length" class="image-gallery">
+        <img v-for="img in imageGallery" :src="img" alt="">
       </div>
 
         <deluxe-switch
@@ -203,6 +215,7 @@ function vue_output_menu_packages($product, $sections) {
           },
           data() {
             return {
+              id: <?php echo $product_id ?>,
               vEvent: window.vEvent
             }
           }

@@ -212,6 +212,7 @@ var shabbosPackageMixin = {
       category: undefined,
       packageName: null,
       packageId: null,
+      imageGallery: undefined,
       stock: {
         manage: false,
         inStock: true,
@@ -312,7 +313,7 @@ var shabbosPackageMixin = {
         wooco_extra_items: this.extraPrice.extraItems,
         quantity: 1,
         wooco_people: this.quantity,
-        wooco_date: this.$refs.dateInput.value,
+        wooco_date: this.$refs.dateInput.value
       };
       jQuery.ajax({
         type: 'post',
@@ -345,6 +346,7 @@ var shabbosPackageMixin = {
   mounted() {
     let package_data = JSON.parse(this.$refs.packageData.textContent)
 
+    this.imageGallery = package_data.image_gallery
     this.category = package_data.category
     this.packageName = package_data.package_name
     this.packageId = package_data.package_id
