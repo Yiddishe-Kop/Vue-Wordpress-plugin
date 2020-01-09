@@ -227,6 +227,10 @@ var shabbosPackageMixin = {
       minPeople: 2,
       quantity: 2,
       addToCartUrl: '',
+      cartBtn: {
+        class: 'success',
+        html: 'Add to Cart',
+      }
     }
   },
   computed: {
@@ -291,46 +295,48 @@ var shabbosPackageMixin = {
         }
       }
     },
-    handleSubmit(e) {
-      e.preventDefault()
+    addToCart() { // ajax add-to-cart
       if (!this.datepicker.date) {
         alert("Please select your date before continuing.")
       } else if (!this.quantity) {
         alert("Please enter amount of people.")
+      } else if (this.cartBtn.html === 'Added to your cart!') {
+        alert("This package is already in your cart.")
       } else {
-        e.target.submit();
+        let data = {
+          action: 'add_to_cart',
+          product_id: this.packageId,
+          wooco_ids: this.wooco_ids,
+          is_deluxe: this.isDeluxe,
+          wooco_total: this.packagePrice,
+          wooco_extra: this.extraPrice.sum,
+          wooco_extra_items: this.extraPrice.extraItems,
+          quantity: 1,
+          wooco_people: this.quantity,
+          wooco_date: this.datepicker.date
+        };
+        jQuery.ajax({
+          type: 'post',
+          url: wc_add_to_cart_params.ajax_url,
+          data: data,
+          beforeSend: () => {
+            this.cartBtn.class = 'loading'
+            this.cartBtn.html = '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>'
+          },
+          success: response => {
+            if (response.error) {
+              this.cartBtn.class = 'success'
+              this.cartBtn.html = 'Error'
+              console.warn({ response });
+            } else {
+              this.cartBtn.class = 'success'
+              this.cartBtn.html = 'Added to your cart!'
+              console.log({ response });
+              jQuery('#mini-cart').html(response.fragments['div.widget_shopping_cart_content']);
+            }
+          },
+        });
       }
-    },
-    addToCart() { // attempt at ajax add-to-cart
-      let data = {
-        action: 'add_to_cart',
-        product_id: this.packageId,
-        variation_id: '',
-        wooco_ids: this.wooco_ids,
-        is_deluxe: this.isDeluxe,
-        wooco_total: this.packagePrice,
-        wooco_extra: this.extraPrice.sum,
-        wooco_extra_items: this.extraPrice.extraItems,
-        quantity: 1,
-        wooco_people: this.quantity,
-        wooco_date: this.$refs.dateInput.value
-      };
-      jQuery.ajax({
-        type: 'post',
-        url: wc_add_to_cart_params.ajax_url,
-        data: data,
-        beforeSend: function (response) {
-          console.log(data, wc_add_to_cart_params.ajax_url);
-        },
-        success: function (response) {
-          if (response.error) {
-            console.warn({ response });
-          } else {
-            console.log({ response });
-            jQuery('#mini-cart').html(response.fragments['div.widget_shopping_cart_content']);
-          }
-        },
-      });
     },
     shouldShowComp(showIn) {
       switch (showIn) {

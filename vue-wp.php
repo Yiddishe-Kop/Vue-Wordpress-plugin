@@ -11,8 +11,9 @@
 
 //Register scripts to use
 function func_load_vuescripts() {
-    if (strpos($_SERVER['REQUEST_URI'], 'vendor') !== false) { // only load vue files if in "vendor" page [checks if 'vendor' in url]
-        wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false);
+    if (strpos($_SERVER['REQUEST_URI'], 'vendor') !== false || is_single()) { // only load vue files if in "vendor" page [checks if 'vendor' in url]
+        // wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js', array(), null, false); // development version
+        wp_enqueue_script('vuejs', 'https://cdn.jsdelivr.net/npm/vue@2.6.11', array(), null, false);
         wp_enqueue_script('vue_datepicker', 'https://unpkg.com/vuejs-datepicker', array('vuejs'), null, false);
         wp_enqueue_script('vue-mixins', get_template_directory_uri() . '/assets/vue-mixins.js', array('vuejs'), null, false);
         wp_enqueue_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', array('vuejs'), false);
@@ -176,14 +177,7 @@ function vue_output_menu_packages($product, $sections) {
             </transition-group>
           </food-component>
         </meal-section>
-        <form @submit="handleSubmit" :action="addToCartUrl" name="add-to-cart" method="post" enctype="multipart/form-data" class="summary">
-          <input name="add-to-cart" type="hidden" :value="packageId">
-          <input name="wooco_ids" type="hidden" :value="wooco_ids">
-          <input name="is_deluxe" type="hidden" :value="isDeluxe">
-          <input name="wooco_total" type="hidden" :value="packagePrice">
-          <input name="wooco_extra" type="hidden" :value="extraPrice.sum">
-          <input name="wooco_extra_items" type="hidden" :value="extraPrice.extraItems">
-          <input name="quantity" type="hidden" value="1">
+        <form @submit.prevent="addToCart" class="summary">
           <i class="icon flaticon-users"></i>
           <input name="wooco_people" type="number" :min="minPeople" v-model="quantity" class="form-control" required >
           <i class="icon flaticon-calendar"></i>
@@ -201,7 +195,7 @@ function vue_output_menu_packages($product, $sections) {
           <div class="spacer"></div>
           <div v-if="stock.inStock" style="align-self:flex-end;">
             <span class="total">Total: <b>${{(packagePrice * quantity) + extraPrice.sum}}</b></span>
-            <button-cta type="submit" >Add to Cart</button-cta>
+            <button-cta type="submit" :class="[cartBtn.class]" v-html="cartBtn.html"></button-cta>
           </div>
         </form>
   </div>
