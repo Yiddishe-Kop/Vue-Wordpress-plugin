@@ -306,6 +306,9 @@
 
 .vue-app .dropdown-wrapper .dropdown {
   display: inline-block;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   background-color: var(--grey3);
   border: 1px solid transparent;
   border-radius: 8px;

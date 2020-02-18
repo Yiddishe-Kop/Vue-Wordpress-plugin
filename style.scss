@@ -256,6 +256,7 @@
     user-select: none;
     .dropdown {
       display: inline-block;
+      flex: 1;
       background-color: var(--grey3);
       border: 1px solid transparent;
       border-radius: 8px;

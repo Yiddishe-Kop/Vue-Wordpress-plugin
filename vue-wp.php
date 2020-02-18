@@ -118,6 +118,7 @@ function vue_output_menu_packages($product, $sections) {
       </div>
 
         <deluxe-switch
+          v-if="basePrice.basic != basePrice.deluxe"
           @change="onDeluxeChange"
           id="<?php echo $product_id ?>"
           label1="Basic"
